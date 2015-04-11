@@ -6,6 +6,6 @@
     <color name="primary_dark">#d32f2f</color>
     <color name="accent">#536dfe</color>
     <color name="control_normal">#888888</color>
-
+    <color name="fab_pressed">#3d5afe</color>
 
 </resources>
