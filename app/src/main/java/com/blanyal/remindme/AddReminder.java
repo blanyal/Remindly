@@ -1,40 +1,25 @@
 package com.blanyal.remindme;
 
-import android.content.Intent;
-import android.support.v7.app.ActionBarActivity;
+
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-
-import com.getbase.floatingactionbutton.FloatingActionButton;
 
 
-public class MainActivity extends ActionBarActivity {
+public class AddReminder extends ActionBarActivity {
 
     private Toolbar mToolbar;
-    private FloatingActionButton mAddReminderButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_add_reminder);
 
 
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
-        mAddReminderButton = (FloatingActionButton) findViewById(R.id.add_reminder);
 
-
-        mToolbar.setTitle(R.string.app_name);
-
-        mAddReminderButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(v.getContext(), AddReminder.class);
-                startActivity(intent);
-            }
-        });
 
     }
 
