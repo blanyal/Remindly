@@ -14,6 +14,5 @@
         <item name="android:windowSharedElementExitTransition">@android:transition/move</item>
         <item name="windowActionModeOverlay">true</item>
         <item name="android:actionModeBackground">@color/primary</item>
-        <item name="android:windowTranslucentStatus">true</item>
     </style>
 </resources>
