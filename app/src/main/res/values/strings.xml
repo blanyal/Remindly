@@ -11,5 +11,6 @@
     <string name="date">Date</string>
     <string name="time">Time</string>
     <string name="repeat">Repeat</string>
+    <string name="repeat_off">Off</string>
 
 </resources>
