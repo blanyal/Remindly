@@ -6,4 +6,10 @@
 
     <string name="title_activity_add_reminder">Add Reminder</string>
 
+    <string name="add_reminder">Reminder</string>
+    <string name="details">Details</string>
+    <string name="date">Date</string>
+    <string name="time">Time</string>
+    <string name="repeat">Repeat</string>
+
 </resources>

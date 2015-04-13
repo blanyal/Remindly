@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 xmlns:app="http://schemas.android.com/apk/res-auto"
+                xmlns:fab="http://schemas.android.com/apk/res-auto"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
@@ -17,23 +18,243 @@
         android:background="?attr/colorPrimary" />
 
 
-
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/reminder_list"
-        android:layout_below="@+id/toolbar"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_below="@+id/toolbar"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        android:id="@+id/add_reminder_layout_top"
+        android:background="@color/primary"
+        android:orientation="vertical"
+        android:layout_height="148dp">
+
+
+        <EditText
+            android:layout_width="match_parent"
+            android:id="@+id/reminder_title"
+            android:layout_marginLeft="72dp"
+            android:hint="@string/add_reminder"
+            android:textSize="25dp"
+            android:lines="4"
+            android:minLines="4"
+            android:gravity="top|left"
+            android:textColor="@android:color/white"
+            android:scrollHorizontally="false"
+            android:textColorHint="@color/primary_text_disabled_material_dark"
+            android:inputType="textCapWords|textMultiLine"
+            android:layout_marginRight="16dp"
+            android:layout_height="140dp"/>
+
+
+
+
+
+    </LinearLayout>
+
+    <ScrollView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="fill_parent"
+        android:layout_below="@id/add_reminder_layout_top"
+        android:layout_height="fill_parent">
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:orientation="vertical"
+            android:layout_height="wrap_content">
+
+
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_marginTop="8dp"
+            android:text="@string/details"
+            android:id="@+id/details"
+            android:textSize="15dp"
+            android:gravity="center_vertical"
+            android:layout_marginLeft="72dp"
+            android:textColor="@color/abc_secondary_text_material_light"
+            android:layout_height="72dp"/>
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:clickable="true"
+            android:id="@+id/date"
+            android:background="?android:attr/selectableItemBackground"
+            android:layout_height="72dp">
+
+
+
+
+            <ImageView
+                android:id="@+id/date_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="32dp"
+                android:src="@drawable/ic_view_day_grey600_24dp"
+                android:layout_centerVertical="true" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:orientation="vertical"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@id/date_icon"
+                android:layout_height="wrap_content">
+
+
+                <TextView
+                    android:id="@+id/date_text"
+                    android:textColor="@color/abc_primary_text_material_light"
+                    android:layout_width="wrap_content"
+                    android:textSize="15dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/date" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:id="@+id/set_date"
+                    android:textSize="15dp"
+                    android:textColor="@color/abc_secondary_text_material_light"
+                    android:layout_height="wrap_content"/>
+
+
+
+            </LinearLayout>
+
+        </RelativeLayout>
+
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:clickable="true"
+            android:id="@+id/time"
+            android:background="?android:attr/selectableItemBackground"
+            android:layout_height="72dp">
+
+
+
+
+            <ImageView
+                android:id="@+id/time_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="32dp"
+                android:src="@drawable/ic_access_time_grey600_24dp"
+                android:layout_centerVertical="true" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:orientation="vertical"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@id/time_icon"
+                android:layout_height="wrap_content">
+
+
+                <TextView
+                    android:id="@+id/time_text"
+                    android:textColor="@color/abc_primary_text_material_light"
+                    android:layout_width="wrap_content"
+                    android:textSize="15dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/time" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:id="@+id/set_time"
+                    android:textSize="15dp"
+                    android:textColor="@color/abc_secondary_text_material_light"
+                    android:layout_height="wrap_content"/>
+
+
+
+            </LinearLayout>
+
+        </RelativeLayout>
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:clickable="true"
+            android:id="@+id/repeat"
+            android:background="?android:attr/selectableItemBackground"
+            android:layout_height="72dp">
+
+
+
+
+            <ImageView
+                android:id="@+id/repeat_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="32dp"
+                android:src="@drawable/ic_access_time_grey600_24dp"
+                android:layout_centerVertical="true" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:orientation="vertical"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@id/repeat_icon"
+                android:layout_height="wrap_content">
+
+
+                <TextView
+                    android:id="@+id/repeat_text"
+                    android:textColor="@color/abc_primary_text_material_light"
+                    android:layout_width="wrap_content"
+                    android:textSize="15dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/repeat" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:id="@+id/set_repeat"
+                    android:textSize="15dp"
+                    android:textColor="@color/abc_secondary_text_material_light"
+                    android:layout_height="wrap_content"/>
+
+
+
+            </LinearLayout>
+
+        </RelativeLayout>
+
+
+
+        </LinearLayout>
+
+
+    </ScrollView>
 
 
 
     <View
         android:layout_width="match_parent"
         android:layout_height="2dp"
-        android:layout_below="@+id/toolbar"
+        android:layout_below="@+id/add_reminder_layout_top"
         android:background="@drawable/toolbar_dropshadow" />
 
 
-
+    <com.getbase.floatingactionbutton.FloatingActionButton
+        android:id="@+id/starred2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        fab:fab_icon="@drawable/ic_fab_star"
+        fab:fab_colorNormal="@color/accent"
+        fab:fab_colorPressed="@color/fab_pressed"
+        app:fab_size="normal"
+        android:layout_alignParentLeft="true"
+        android:layout_marginTop="168dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="8dp"/>
 
 
 </RelativeLayout>
