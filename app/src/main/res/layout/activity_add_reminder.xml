@@ -72,13 +72,14 @@
             android:textSize="15dp"
             android:gravity="center_vertical"
             android:layout_marginLeft="72dp"
-            android:textColor="@color/abc_secondary_text_material_light"
+            android:textColor="@color/abc_secondary_text_material_dark"
             android:layout_height="72dp"/>
 
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:clickable="true"
+            android:onClick="setDate"
             android:id="@+id/date"
             android:background="?android:attr/selectableItemBackground"
             android:layout_height="72dp">
@@ -106,7 +107,7 @@
 
                 <TextView
                     android:id="@+id/date_text"
-                    android:textColor="@color/abc_primary_text_material_light"
+                    android:textColor="@color/abc_primary_text_material_dark"
                     android:layout_width="wrap_content"
                     android:textSize="15dp"
                     android:layout_height="wrap_content"
@@ -116,7 +117,7 @@
                     android:layout_width="wrap_content"
                     android:id="@+id/set_date"
                     android:textSize="15dp"
-                    android:textColor="@color/abc_secondary_text_material_light"
+                    android:textColor="@color/abc_secondary_text_material_dark"
                     android:layout_height="wrap_content"/>
 
 
@@ -130,6 +131,7 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:clickable="true"
+            android:onClick="setTime"
             android:id="@+id/time"
             android:background="?android:attr/selectableItemBackground"
             android:layout_height="72dp">
@@ -157,7 +159,7 @@
 
                 <TextView
                     android:id="@+id/time_text"
-                    android:textColor="@color/abc_primary_text_material_light"
+                    android:textColor="@color/abc_primary_text_material_dark"
                     android:layout_width="wrap_content"
                     android:textSize="15dp"
                     android:layout_height="wrap_content"
@@ -167,7 +169,7 @@
                     android:layout_width="wrap_content"
                     android:id="@+id/set_time"
                     android:textSize="15dp"
-                    android:textColor="@color/abc_secondary_text_material_light"
+                    android:textColor="@color/abc_secondary_text_material_dark"
                     android:layout_height="wrap_content"/>
 
 
@@ -180,6 +182,7 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:clickable="true"
+            android:onClick="setRepeat"
             android:id="@+id/repeat"
             android:background="?android:attr/selectableItemBackground"
             android:layout_height="72dp">
@@ -207,7 +210,7 @@
 
                 <TextView
                     android:id="@+id/repeat_text"
-                    android:textColor="@color/abc_primary_text_material_light"
+                    android:textColor="@color/abc_primary_text_material_dark"
                     android:layout_width="wrap_content"
                     android:textSize="15dp"
                     android:layout_height="wrap_content"
@@ -217,7 +220,8 @@
                     android:layout_width="wrap_content"
                     android:id="@+id/set_repeat"
                     android:textSize="15dp"
-                    android:textColor="@color/abc_secondary_text_material_light"
+                    android:text="@string/repeat_off"
+                    android:textColor="@color/abc_secondary_text_material_dark"
                     android:layout_height="wrap_content"/>
 
 
@@ -241,6 +245,20 @@
         android:layout_below="@+id/add_reminder_layout_top"
         android:background="@drawable/toolbar_dropshadow" />
 
+
+    <com.getbase.floatingactionbutton.FloatingActionButton
+        android:id="@+id/starred1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        fab:fab_icon="@drawable/ic_star_grey600_24dp"
+        fab:fab_colorNormal="@color/accent"
+        fab:fab_colorPressed="@color/fab_pressed"
+        app:fab_size="normal"
+        android:layout_alignParentLeft="true"
+        android:layout_marginTop="168dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="8dp"/>
 
     <com.getbase.floatingactionbutton.FloatingActionButton
         android:id="@+id/starred2"
