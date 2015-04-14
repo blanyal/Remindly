@@ -62,8 +62,8 @@ public class AddReminderActivity extends ActionBarActivity implements
     private String mDate;
     private String mRepeatNo;
     private String mRepeatType;
-    private Boolean mActive;
-    private Boolean mRepeat;
+    private String mActive;
+    private String mRepeat;
 
 
     @Override
@@ -73,8 +73,6 @@ public class AddReminderActivity extends ActionBarActivity implements
 
 
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
-        mFAB1 = (FloatingActionButton) findViewById(R.id.starred1);
-        mFAB2 = (FloatingActionButton) findViewById(R.id.starred2);
         mReminderText = (EditText) findViewById(R.id.reminder_title);
         mDateText = (TextView) findViewById(R.id.set_date);
         mTimeText = (TextView) findViewById(R.id.set_time);
@@ -89,7 +87,10 @@ public class AddReminderActivity extends ActionBarActivity implements
         getSupportActionBar().setHomeButtonEnabled(true);
 
 
-        mActive = true;
+        mActive = "true";
+        mRepeat = "true";
+        mRepeatNo = Integer.toString(1);
+        mRepeatType = "Hour";
 
 
         mCalendar = Calendar.getInstance();
@@ -124,6 +125,9 @@ public class AddReminderActivity extends ActionBarActivity implements
 
         mDateText.setText(mDate);
         mTimeText.setText(mTime);
+        mRepeatNoText.setText(mRepeatNo);
+        mRepeatTypeText.setText(mRepeatType);
+        mRepeatText.setText("Every " + mRepeatNo + " " + mRepeatType + "(s)");
 
     }
 
@@ -167,16 +171,22 @@ public class AddReminderActivity extends ActionBarActivity implements
 
 
     public void selectFab1(View v) {
+        mFAB1 = (FloatingActionButton) findViewById(R.id.starred1);
         mFAB1.setVisibility(View.GONE);
+        mFAB2 = (FloatingActionButton) findViewById(R.id.starred2);
         mFAB2.setVisibility(View.VISIBLE);
-        mActive = false;
+        mActive = "true";
+        Log.d("Active", mActive);
     }
 
 
     public void selectFab2(View v) {
+        mFAB2 = (FloatingActionButton) findViewById(R.id.starred2);
         mFAB2.setVisibility(View.GONE);
+        mFAB1 = (FloatingActionButton) findViewById(R.id.starred1);
         mFAB1.setVisibility(View.VISIBLE);
-        mActive = true;
+        mActive = "false";
+        Log.d("Active", mActive);
     }
 
 
@@ -184,10 +194,10 @@ public class AddReminderActivity extends ActionBarActivity implements
         boolean on = ((Switch) view).isChecked();
 
         if (on) {
-            mRepeat = true;
+            mRepeat = "true";
             mRepeatText.setText("Every " + mRepeatNo + " " + mRepeatType + "(s)");
         } else {
-            mRepeat = false;
+            mRepeat = "false";
             mRepeatText.setText(R.string.repeat_off);
         }
     }
@@ -203,16 +213,15 @@ public class AddReminderActivity extends ActionBarActivity implements
         items[3] = "Week";
         items[4] = "Month";
 
-
-
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Select Category");
+        builder.setTitle("Select Type");
         builder.setItems(items, new DialogInterface.OnClickListener() {
 
             public void onClick(DialogInterface dialog, int item) {
 
-                mRepeatTypeText.setText(items[item]);
-
+                mRepeatType = items[item];
+                mRepeatTypeText.setText(mRepeatType);
+                mRepeatText.setText("Every " + mRepeatNo + " " + mRepeatType + "(s)");
             }
         });
         AlertDialog alert = builder.create();
@@ -231,7 +240,10 @@ public class AddReminderActivity extends ActionBarActivity implements
         alert.setPositiveButton("Ok",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
-                        mRepeatNoText.setText(input.getText());
+
+                        mRepeatNo = input.getText().toString().trim();
+                        mRepeatNoText.setText(mRepeatNo);
+                        mRepeatText.setText("Every " + mRepeatNo + " " + mRepeatType + "(s)");
                     }
                 });
 
@@ -241,6 +253,30 @@ public class AddReminderActivity extends ActionBarActivity implements
             }
         });
         alert.show();
+    }
+
+
+    public void saveReminder(){
+
+        ReminderDatabase rb = new ReminderDatabase(this);
+
+        // Inserting Reminder
+        rb.addReminder(new Reminder(mTitle, mDate, mTime, mRepeat, mRepeatNo, mRepeatType, mActive));
+
+        List<Reminder> reminders = rb.getAllReminders();
+
+        for (Reminder rm : reminders) {
+            String log = "Id: " + rm.getID() + " ,Title: " + rm.getTitle() + " ,Date: " + rm.getDate()
+                    + " ,Time: " + rm.getTime() + " ,Repeat: " + rm.getRepeat() + " ,RepeatNo: " + rm.getRepeatNo()
+                    + " ,RepeatType: " + rm.getRepeatType() + " ,Active: " + rm.getActive();
+
+            Log.d("Name: ", log);
+        }
+
+        Toast.makeText(getApplicationContext(), "Saved",
+                Toast.LENGTH_SHORT).show();
+
+        onBackPressed();
     }
 
 
@@ -272,9 +308,7 @@ public class AddReminderActivity extends ActionBarActivity implements
                     mReminderText.setError("Reminder Title cannot be blank!");
 
                 else {
-                    Toast.makeText(getApplicationContext(), "Saved",
-                            Toast.LENGTH_SHORT).show();
-                    onBackPressed();
+                    saveReminder();
                 }
                 return true;
 
