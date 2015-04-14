@@ -26,6 +26,7 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
+import android.text.InputType;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Menu;
@@ -41,6 +42,7 @@ import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 import com.wdullaer.materialdatetimepicker.time.RadialPickerLayout;
 import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -232,10 +234,11 @@ public class AddReminderActivity extends ActionBarActivity implements
 
     public void setRepeatNo(View v){
         AlertDialog.Builder alert = new AlertDialog.Builder(this);
-        alert.setTitle("Number of Repetitions");
-        alert.setMessage("Enter Number");
+        alert.setTitle("Enter Number");
+        //alert.setMessage("Enter Number");
 
         final EditText input = new EditText(this);
+        input.setInputType(InputType.TYPE_CLASS_NUMBER);
         alert.setView(input);
         alert.setPositiveButton("Ok",
                 new DialogInterface.OnClickListener() {
