@@ -20,15 +20,20 @@
 package com.blanyal.remindme;
 
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
+import android.text.InputType;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,16 +42,19 @@ import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 import com.wdullaer.materialdatetimepicker.time.RadialPickerLayout;
 import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
 
+import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 
-public class AddReminder extends ActionBarActivity implements
+public class AddReminderActivity extends ActionBarActivity implements
         TimePickerDialog.OnTimeSetListener,
         DatePickerDialog.OnDateSetListener{
 
     private Toolbar mToolbar;
     private EditText mReminderText;
-    private TextView mDateText, mTimeText, mRepeatText;
+    private TextView mDateText, mTimeText, mRepeatText, mRepeatNoText, mRepeatTypeText;
     private FloatingActionButton mFAB1;
     private FloatingActionButton mFAB2;
     private Calendar mCalendar;
@@ -54,6 +62,10 @@ public class AddReminder extends ActionBarActivity implements
     private String mTitle;
     private String mTime;
     private String mDate;
+    private String mRepeatNo;
+    private String mRepeatType;
+    private String mActive;
+    private String mRepeat;
 
 
     @Override
@@ -63,18 +75,24 @@ public class AddReminder extends ActionBarActivity implements
 
 
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
-        mFAB1 = (FloatingActionButton) findViewById(R.id.starred1);
-        mFAB2 = (FloatingActionButton) findViewById(R.id.starred2);
         mReminderText = (EditText) findViewById(R.id.reminder_title);
         mDateText = (TextView) findViewById(R.id.set_date);
         mTimeText = (TextView) findViewById(R.id.set_time);
         mRepeatText = (TextView) findViewById(R.id.set_repeat);
+        mRepeatNoText = (TextView) findViewById(R.id.set_repeat_no);
+        mRepeatTypeText = (TextView) findViewById(R.id.set_repeat_type);
 
 
         setSupportActionBar(mToolbar);
         getSupportActionBar().setTitle(R.string.title_activity_add_reminder);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
+
+
+        mActive = "true";
+        mRepeat = "true";
+        mRepeatNo = Integer.toString(1);
+        mRepeatType = "Hour";
 
 
         mCalendar = Calendar.getInstance();
@@ -109,6 +127,9 @@ public class AddReminder extends ActionBarActivity implements
 
         mDateText.setText(mDate);
         mTimeText.setText(mTime);
+        mRepeatNoText.setText(mRepeatNo);
+        mRepeatTypeText.setText(mRepeatType);
+        mRepeatText.setText("Every " + mRepeatNo + " " + mRepeatType + "(s)");
 
     }
 
@@ -125,6 +146,7 @@ public class AddReminder extends ActionBarActivity implements
         tpd.show(getFragmentManager(), "Timepickerdialog");
     }
 
+
     public void setDate(View v){
         Calendar now = Calendar.getInstance();
         DatePickerDialog dpd = DatePickerDialog.newInstance(
@@ -135,6 +157,7 @@ public class AddReminder extends ActionBarActivity implements
         );
         dpd.show(getFragmentManager(), "Datepickerdialog");
     }
+
 
     @Override
     public void onTimeSet(RadialPickerLayout view, int hourOfDay, int minute) {
@@ -149,17 +172,129 @@ public class AddReminder extends ActionBarActivity implements
     }
 
 
+    public void selectFab1(View v) {
+        mFAB1 = (FloatingActionButton) findViewById(R.id.starred1);
+        mFAB1.setVisibility(View.GONE);
+        mFAB2 = (FloatingActionButton) findViewById(R.id.starred2);
+        mFAB2.setVisibility(View.VISIBLE);
+        mActive = "true";
+        Log.d("Active", mActive);
+    }
+
+
+    public void selectFab2(View v) {
+        mFAB2 = (FloatingActionButton) findViewById(R.id.starred2);
+        mFAB2.setVisibility(View.GONE);
+        mFAB1 = (FloatingActionButton) findViewById(R.id.starred1);
+        mFAB1.setVisibility(View.VISIBLE);
+        mActive = "false";
+        Log.d("Active", mActive);
+    }
+
+
+    public void onSwitchRepeat(View view) {
+        boolean on = ((Switch) view).isChecked();
+
+        if (on) {
+            mRepeat = "true";
+            mRepeatText.setText("Every " + mRepeatNo + " " + mRepeatType + "(s)");
+        } else {
+            mRepeat = "false";
+            mRepeatText.setText(R.string.repeat_off);
+        }
+    }
+
+
+    public void selectRepeatType(View v){
+
+        final String[] items = new String[5];
+
+        items[0] = "Minute";
+        items[1] = "Hour";
+        items[2] = "Day";
+        items[3] = "Week";
+        items[4] = "Month";
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Select Type");
+        builder.setItems(items, new DialogInterface.OnClickListener() {
+
+            public void onClick(DialogInterface dialog, int item) {
+
+                mRepeatType = items[item];
+                mRepeatTypeText.setText(mRepeatType);
+                mRepeatText.setText("Every " + mRepeatNo + " " + mRepeatType + "(s)");
+            }
+        });
+        AlertDialog alert = builder.create();
+        alert.show();
+
+    }
+
+
+    public void setRepeatNo(View v){
+        AlertDialog.Builder alert = new AlertDialog.Builder(this);
+        alert.setTitle("Enter Number");
+        //alert.setMessage("Enter Number");
+
+        final EditText input = new EditText(this);
+        input.setInputType(InputType.TYPE_CLASS_NUMBER);
+        alert.setView(input);
+        alert.setPositiveButton("Ok",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+
+                        mRepeatNo = input.getText().toString().trim();
+                        mRepeatNoText.setText(mRepeatNo);
+                        mRepeatText.setText("Every " + mRepeatNo + " " + mRepeatType + "(s)");
+                    }
+                });
+
+        alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                // do nothing
+            }
+        });
+        alert.show();
+    }
+
+
+    public void saveReminder(){
+
+        ReminderDatabase rb = new ReminderDatabase(this);
+
+        // Inserting Reminder
+        rb.addReminder(new Reminder(mTitle, mDate, mTime, mRepeat, mRepeatNo, mRepeatType, mActive));
+
+        List<Reminder> reminders = rb.getAllReminders();
+
+        for (Reminder rm : reminders) {
+            String log = "Id: " + rm.getID() + " ,Title: " + rm.getTitle() + " ,Date: " + rm.getDate()
+                    + " ,Time: " + rm.getTime() + " ,Repeat: " + rm.getRepeat() + " ,RepeatNo: " + rm.getRepeatNo()
+                    + " ,RepeatType: " + rm.getRepeatType() + " ,Active: " + rm.getActive();
+
+            Log.d("Name: ", log);
+        }
+
+        Toast.makeText(getApplicationContext(), "Saved",
+                Toast.LENGTH_SHORT).show();
+
+        onBackPressed();
+    }
+
 
     @Override
     public void onBackPressed() {
         super.onBackPressed();
     }
 
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_add_reminder, menu);
         return true;
     }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -176,9 +311,7 @@ public class AddReminder extends ActionBarActivity implements
                     mReminderText.setError("Reminder Title cannot be blank!");
 
                 else {
-                    Toast.makeText(getApplicationContext(), "Saved",
-                            Toast.LENGTH_SHORT).show();
-                    onBackPressed();
+                    saveReminder();
                 }
                 return true;
 

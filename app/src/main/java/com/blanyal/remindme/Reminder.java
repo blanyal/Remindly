@@ -24,13 +24,13 @@ public class Reminder {
     private String mTitle;
     private String mDate;
     private String mTime;
-    private Boolean mRepeat;
+    private String mRepeat;
     private String mRepeatNo;
     private String mRepeatType;
-    private Boolean mActive;
+    private String mActive;
 
 
-    public Reminder(int ID, String Title, String Date, String Time, Boolean Repeat, String RepeatNo, String RepeatType, Boolean Active){
+    public Reminder(int ID, String Title, String Date, String Time, String Repeat, String RepeatNo, String RepeatType, String Active){
         mID = ID;
         mTitle = Title;
         mDate = Date;
@@ -41,7 +41,7 @@ public class Reminder {
         mActive = Active;
     }
 
-    public Reminder(String Title, String Date, String Time, Boolean Repeat, String RepeatNo, String RepeatType, Boolean Active){
+    public Reminder(String Title, String Date, String Time, String Repeat, String RepeatNo, String RepeatType, String Active){
         mTitle = Title;
         mDate = Date;
         mTime = Time;
@@ -85,14 +85,6 @@ public class Reminder {
         mTime = time;
     }
 
-    public Boolean isRepeat() {
-        return mRepeat;
-    }
-
-    public void setRepeat(Boolean repeat) {
-        mRepeat = repeat;
-    }
-
     public String getRepeatType() {
         return mRepeatType;
     }
@@ -109,11 +101,19 @@ public class Reminder {
         mRepeatNo = repeatNo;
     }
 
-    public Boolean isActive() {
+    public String getRepeat() {
+        return mRepeat;
+    }
+
+    public void setRepeat(String repeat) {
+        mRepeat = repeat;
+    }
+
+    public String getActive() {
         return mActive;
     }
 
-    public void setActive(Boolean active) {
+    public void setActive(String active) {
         mActive = active;
     }
 }
