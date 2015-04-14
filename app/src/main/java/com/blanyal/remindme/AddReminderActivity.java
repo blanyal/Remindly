@@ -20,15 +20,19 @@
 package com.blanyal.remindme;
 
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,16 +41,18 @@ import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 import com.wdullaer.materialdatetimepicker.time.RadialPickerLayout;
 import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
 
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 
-public class AddReminder extends ActionBarActivity implements
+public class AddReminderActivity extends ActionBarActivity implements
         TimePickerDialog.OnTimeSetListener,
         DatePickerDialog.OnDateSetListener{
 
     private Toolbar mToolbar;
     private EditText mReminderText;
-    private TextView mDateText, mTimeText, mRepeatText;
+    private TextView mDateText, mTimeText, mRepeatText, mRepeatNoText, mRepeatTypeText;
     private FloatingActionButton mFAB1;
     private FloatingActionButton mFAB2;
     private Calendar mCalendar;
@@ -54,6 +60,10 @@ public class AddReminder extends ActionBarActivity implements
     private String mTitle;
     private String mTime;
     private String mDate;
+    private String mRepeatNo;
+    private String mRepeatType;
+    private Boolean mActive;
+    private Boolean mRepeat;
 
 
     @Override
@@ -69,12 +79,17 @@ public class AddReminder extends ActionBarActivity implements
         mDateText = (TextView) findViewById(R.id.set_date);
         mTimeText = (TextView) findViewById(R.id.set_time);
         mRepeatText = (TextView) findViewById(R.id.set_repeat);
+        mRepeatNoText = (TextView) findViewById(R.id.set_repeat_no);
+        mRepeatTypeText = (TextView) findViewById(R.id.set_repeat_type);
 
 
         setSupportActionBar(mToolbar);
         getSupportActionBar().setTitle(R.string.title_activity_add_reminder);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
+
+
+        mActive = true;
 
 
         mCalendar = Calendar.getInstance();
@@ -125,6 +140,7 @@ public class AddReminder extends ActionBarActivity implements
         tpd.show(getFragmentManager(), "Timepickerdialog");
     }
 
+
     public void setDate(View v){
         Calendar now = Calendar.getInstance();
         DatePickerDialog dpd = DatePickerDialog.newInstance(
@@ -135,6 +151,7 @@ public class AddReminder extends ActionBarActivity implements
         );
         dpd.show(getFragmentManager(), "Datepickerdialog");
     }
+
 
     @Override
     public void onTimeSet(RadialPickerLayout view, int hourOfDay, int minute) {
@@ -149,17 +166,96 @@ public class AddReminder extends ActionBarActivity implements
     }
 
 
+    public void selectFab1(View v) {
+        mFAB1.setVisibility(View.GONE);
+        mFAB2.setVisibility(View.VISIBLE);
+        mActive = false;
+    }
+
+
+    public void selectFab2(View v) {
+        mFAB2.setVisibility(View.GONE);
+        mFAB1.setVisibility(View.VISIBLE);
+        mActive = true;
+    }
+
+
+    public void onSwitchRepeat(View view) {
+        boolean on = ((Switch) view).isChecked();
+
+        if (on) {
+            mRepeat = true;
+            mRepeatText.setText("Every " + mRepeatNo + " " + mRepeatType + "(s)");
+        } else {
+            mRepeat = false;
+            mRepeatText.setText(R.string.repeat_off);
+        }
+    }
+
+
+    public void selectRepeatType(View v){
+
+        final String[] items = new String[5];
+
+        items[0] = "Minute";
+        items[1] = "Hour";
+        items[2] = "Day";
+        items[3] = "Week";
+        items[4] = "Month";
+
+
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Select Category");
+        builder.setItems(items, new DialogInterface.OnClickListener() {
+
+            public void onClick(DialogInterface dialog, int item) {
+
+                mRepeatTypeText.setText(items[item]);
+
+            }
+        });
+        AlertDialog alert = builder.create();
+        alert.show();
+
+    }
+
+
+    public void setRepeatNo(View v){
+        AlertDialog.Builder alert = new AlertDialog.Builder(this);
+        alert.setTitle("Number of Repetitions");
+        alert.setMessage("Enter Number");
+
+        final EditText input = new EditText(this);
+        alert.setView(input);
+        alert.setPositiveButton("Ok",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        mRepeatNoText.setText(input.getText());
+                    }
+                });
+
+        alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                // do nothing
+            }
+        });
+        alert.show();
+    }
+
 
     @Override
     public void onBackPressed() {
         super.onBackPressed();
     }
 
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_add_reminder, menu);
         return true;
     }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

@@ -51,7 +51,7 @@ public class MainActivity extends ActionBarActivity {
         mAddReminderButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(v.getContext(), AddReminder.class);
+                Intent intent = new Intent(v.getContext(), AddReminderActivity.class);
                 startActivity(intent);
             }
         });

@@ -181,10 +181,7 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:clickable="true"
-            android:onClick="setRepeat"
             android:id="@+id/repeat"
-            android:background="?android:attr/selectableItemBackground"
             android:layout_height="72dp">
 
 
@@ -203,6 +200,7 @@
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:orientation="vertical"
+                android:id="@+id/repeat_ll"
                 android:layout_centerVertical="true"
                 android:layout_toRightOf="@id/repeat_icon"
                 android:layout_height="wrap_content">
@@ -216,11 +214,73 @@
                     android:layout_height="wrap_content"
                     android:text="@string/repeat" />
 
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:id="@+id/set_repeat"
                     android:textSize="15dp"
-                    android:text="@string/repeat_off"
+                    android:textColor="@color/abc_secondary_text_material_dark"
+                    android:layout_height="wrap_content"/>
+
+
+            </LinearLayout>
+
+            <Switch
+                android:id="@+id/repeat_switch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="16dp"
+                android:layout_marginLeft="8dp"
+                android:onClick="onSwitchRepeat"
+                android:checked="true"
+                android:textOn="On"
+                android:textOff="Off"/>
+
+
+
+        </RelativeLayout>
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:id="@+id/RepeatNo"
+            android:clickable="true"
+            android:onClick="setRepeatNo"
+            android:background="?android:attr/selectableItemBackground"
+            android:layout_height="72dp">
+
+            <ImageView
+                android:id="@+id/repeat_no_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="32dp"
+                android:src="@drawable/ic_access_time_grey600_24dp"
+                android:layout_centerVertical="true" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:orientation="vertical"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@id/repeat_no_icon"
+                android:layout_height="wrap_content">
+
+
+                <TextView
+                    android:id="@+id/repeat_no_text"
+                    android:textColor="@color/abc_primary_text_material_dark"
+                    android:layout_width="wrap_content"
+                    android:textSize="15dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/repeat_no" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:id="@+id/set_repeat_no"
+                    android:textSize="15dp"
                     android:textColor="@color/abc_secondary_text_material_dark"
                     android:layout_height="wrap_content"/>
 
@@ -230,6 +290,52 @@
 
         </RelativeLayout>
 
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:id="@+id/RepeatType"
+            android:clickable="true"
+            android:onClick="selectRepeatType"
+            android:background="?android:attr/selectableItemBackground"
+            android:layout_height="72dp">
+
+            <ImageView
+                android:id="@+id/repeat_type_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="32dp"
+                android:src="@drawable/ic_access_time_grey600_24dp"
+                android:layout_centerVertical="true" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:orientation="vertical"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@id/repeat_type_icon"
+                android:layout_height="wrap_content">
+
+
+                <TextView
+                    android:id="@+id/repeat_type_text"
+                    android:textColor="@color/abc_primary_text_material_dark"
+                    android:layout_width="wrap_content"
+                    android:textSize="15dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/repeat_type" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:id="@+id/set_repeat_type"
+                    android:textSize="15dp"
+                    android:textColor="@color/abc_secondary_text_material_dark"
+                    android:layout_height="wrap_content"/>
+
+
+
+            </LinearLayout>
+
+        </RelativeLayout>
 
 
         </LinearLayout>
@@ -251,6 +357,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:clickable="true"
+        android:onClick="selectFab1"
         fab:fab_icon="@drawable/ic_star_grey600_24dp"
         fab:fab_colorNormal="@color/accent"
         fab:fab_colorPressed="@color/fab_pressed"
@@ -265,6 +372,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:clickable="true"
+        android:onClick="selectFab2"
         fab:fab_icon="@drawable/ic_fab_star"
         fab:fab_colorNormal="@color/accent"
         fab:fab_colorPressed="@color/fab_pressed"
