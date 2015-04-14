@@ -27,9 +27,10 @@ public class Reminder {
     private Boolean mRepeat;
     private String mRepeatNo;
     private String mRepeatType;
+    private Boolean mActive;
 
 
-    public Reminder(int ID, String Title, String Date, String Time, Boolean Repeat, String RepeatNo, String RepeatType){
+    public Reminder(int ID, String Title, String Date, String Time, Boolean Repeat, String RepeatNo, String RepeatType, Boolean Active){
         mID = ID;
         mTitle = Title;
         mDate = Date;
@@ -37,15 +38,17 @@ public class Reminder {
         mRepeat = Repeat;
         mRepeatNo = RepeatNo;
         mRepeatType = RepeatType;
+        mActive = Active;
     }
 
-    public Reminder(String Title, String Date, String Time, Boolean Repeat, String RepeatNo, String RepeatType){
+    public Reminder(String Title, String Date, String Time, Boolean Repeat, String RepeatNo, String RepeatType, Boolean Active){
         mTitle = Title;
         mDate = Date;
         mTime = Time;
         mRepeat = Repeat;
         mRepeatNo = RepeatNo;
         mRepeatType = RepeatType;
+        mActive = Active;
     }
 
     public Reminder(){}
@@ -104,5 +107,13 @@ public class Reminder {
 
     public void setRepeatNo(String repeatNo) {
         mRepeatNo = repeatNo;
+    }
+
+    public Boolean isActive() {
+        return mActive;
+    }
+
+    public void setActive(Boolean active) {
+        mActive = active;
     }
 }
