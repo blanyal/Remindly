@@ -72,7 +72,7 @@
             android:textSize="15dp"
             android:gravity="center_vertical"
             android:layout_marginLeft="72dp"
-            android:textColor="@color/abc_secondary_text_material_light"
+            android:textColor="@color/abc_secondary_text_material_dark"
             android:layout_height="72dp"/>
 
 
@@ -107,7 +107,7 @@
 
                 <TextView
                     android:id="@+id/date_text"
-                    android:textColor="@color/abc_primary_text_material_light"
+                    android:textColor="@color/abc_primary_text_material_dark"
                     android:layout_width="wrap_content"
                     android:textSize="15dp"
                     android:layout_height="wrap_content"
@@ -117,7 +117,7 @@
                     android:layout_width="wrap_content"
                     android:id="@+id/set_date"
                     android:textSize="15dp"
-                    android:textColor="@color/abc_secondary_text_material_light"
+                    android:textColor="@color/abc_secondary_text_material_dark"
                     android:layout_height="wrap_content"/>
 
 
@@ -159,7 +159,7 @@
 
                 <TextView
                     android:id="@+id/time_text"
-                    android:textColor="@color/abc_primary_text_material_light"
+                    android:textColor="@color/abc_primary_text_material_dark"
                     android:layout_width="wrap_content"
                     android:textSize="15dp"
                     android:layout_height="wrap_content"
@@ -169,7 +169,7 @@
                     android:layout_width="wrap_content"
                     android:id="@+id/set_time"
                     android:textSize="15dp"
-                    android:textColor="@color/abc_secondary_text_material_light"
+                    android:textColor="@color/abc_secondary_text_material_dark"
                     android:layout_height="wrap_content"/>
 
 
@@ -210,7 +210,7 @@
 
                 <TextView
                     android:id="@+id/repeat_text"
-                    android:textColor="@color/abc_primary_text_material_light"
+                    android:textColor="@color/abc_primary_text_material_dark"
                     android:layout_width="wrap_content"
                     android:textSize="15dp"
                     android:layout_height="wrap_content"
@@ -221,7 +221,7 @@
                     android:id="@+id/set_repeat"
                     android:textSize="15dp"
                     android:text="@string/repeat_off"
-                    android:textColor="@color/abc_secondary_text_material_light"
+                    android:textColor="@color/abc_secondary_text_material_dark"
                     android:layout_height="wrap_content"/>
 
 

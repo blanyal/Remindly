@@ -27,16 +27,22 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.getbase.floatingactionbutton.FloatingActionButton;
+import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
+import com.wdullaer.materialdatetimepicker.time.RadialPickerLayout;
+import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
 
 import java.util.Calendar;
 
 
-public class AddReminder extends ActionBarActivity {
+public class AddReminder extends ActionBarActivity implements
+        TimePickerDialog.OnTimeSetListener,
+        DatePickerDialog.OnDateSetListener{
 
     private Toolbar mToolbar;
     private EditText mReminderText;
@@ -104,8 +110,44 @@ public class AddReminder extends ActionBarActivity {
         mDateText.setText(mDate);
         mTimeText.setText(mTime);
 
-
     }
+
+
+    public void setTime(View v){
+        Calendar now = Calendar.getInstance();
+        TimePickerDialog tpd = TimePickerDialog.newInstance(
+                this,
+                now.get(Calendar.HOUR_OF_DAY),
+                now.get(Calendar.MINUTE),
+                false
+        );
+        tpd.setThemeDark(false);
+        tpd.show(getFragmentManager(), "Timepickerdialog");
+    }
+
+    public void setDate(View v){
+        Calendar now = Calendar.getInstance();
+        DatePickerDialog dpd = DatePickerDialog.newInstance(
+                this,
+                now.get(Calendar.YEAR),
+                now.get(Calendar.MONTH),
+                now.get(Calendar.DAY_OF_MONTH)
+        );
+        dpd.show(getFragmentManager(), "Datepickerdialog");
+    }
+
+    @Override
+    public void onTimeSet(RadialPickerLayout view, int hourOfDay, int minute) {
+        mTime = hourOfDay + ":" + minute;
+        mTimeText.setText(mTime);
+    }
+
+    @Override
+    public void onDateSet(DatePickerDialog view, int year, int monthOfYear, int dayOfMonth) {
+        mDate = dayOfMonth + "/" + monthOfYear + "/" + year;
+        mDateText.setText(mDate);
+    }
+
 
 
     @Override
