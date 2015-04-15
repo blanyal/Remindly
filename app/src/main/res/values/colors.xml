@@ -1,9 +1,9 @@
 <resources>
 
     <color name="toolbar_title">#ffffff</color>
-    <color name="primary">#009688</color>
-    <color name="primary_dark">#00796b</color>
-    <color name="accent">#607d8b</color>
+    <color name="primary">#37474f</color>
+    <color name="primary_dark">#263238</color>
+    <color name="accent">#78909c</color>
     <color name="control_normal">#888888</color>
     <color name="fab_pressed">#546e7a</color>
 

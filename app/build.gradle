@@ -25,5 +25,6 @@ dependencies {
     compile 'com.android.support:recyclerview-v7:22.0.0'
     compile 'com.getbase:floatingactionbutton:1.9.0'
     compile 'com.wdullaer:materialdatetimepicker:1.2.1'
-
+    compile 'com.bignerdranch.android:recyclerview-multiselect:+'
+    compile 'com.amulyakhare:com.amulyakhare.textdrawable:1.0.1'
 }
