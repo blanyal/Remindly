@@ -21,20 +21,56 @@
 package com.blanyal.remindme;
 
 import android.content.Intent;
+import android.os.Build;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.util.SparseBooleanArray;
+import android.view.ContextMenu;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
 
+import com.amulyakhare.textdrawable.TextDrawable;
+import com.amulyakhare.textdrawable.util.ColorGenerator;
+import com.bignerdranch.android.multiselector.ModalMultiSelectorCallback;
+import com.bignerdranch.android.multiselector.MultiSelector;
+import com.bignerdranch.android.multiselector.SwappingHolder;
 import com.getbase.floatingactionbutton.FloatingActionButton;
+
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
 
 
 public class MainActivity extends ActionBarActivity {
-
+    private RecyclerView mList;
+    private SimpleAdapter mAdapter;
     private Toolbar mToolbar;
     private FloatingActionButton mAddReminderButton;
+    private int mTempPost;
+    private LinkedHashMap<Integer, Integer> IDmap = new LinkedHashMap<>();
+
+    private ReminderDatabase rb = new ReminderDatabase(this);
+    private MultiSelector mMultiSelector = new MultiSelector();
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,9 +80,20 @@ public class MainActivity extends ActionBarActivity {
 
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         mAddReminderButton = (FloatingActionButton) findViewById(R.id.add_reminder);
+        mList = (RecyclerView) findViewById(R.id.reminder_list);
+
+
+        mList.setLayoutManager(getLayoutManager());
+        registerForContextMenu(mList);
+
+
+        mAdapter = new SimpleAdapter();
+        mAdapter.setItemCount(getDefaultItemCount());
+        mList.setAdapter(mAdapter);
 
 
         mToolbar.setTitle(R.string.app_name);
+
 
         mAddReminderButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -58,25 +105,347 @@ public class MainActivity extends ActionBarActivity {
 
     }
 
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        getMenuInflater().inflate(R.menu.menu_add_reminder, menu);
+    }
+
+
+    private android.support.v7.view.ActionMode.Callback mDeleteMode = new ModalMultiSelectorCallback(mMultiSelector) {
+
+        @Override
+        public boolean onCreateActionMode(android.support.v7.view.ActionMode actionMode, Menu menu) {
+            getMenuInflater().inflate(R.menu.menu_add_reminder, menu);
+            return true;
+        }
+
+
+        @Override
+        public boolean onActionItemClicked(android.support.v7.view.ActionMode actionMode, MenuItem menuItem) {
+            switch (menuItem.getItemId()) {
+
+                case R.id.discard_reminder:
+
+                    actionMode.finish();
+
+                    mMultiSelector.clearSelections();
+
+                    Toast.makeText(getApplicationContext(),
+                            "Deleted",
+                            Toast.LENGTH_SHORT).show();
+
+
+                    return true;
+
+
+                case R.id.save_reminder:
+
+
+                    actionMode.finish();
+                    mMultiSelector.clearSelections();
+
+                    //mAdapter.setItemCount(getDefaultItemCount());
+
+                    return true;
+
+                default:
+                    break;
+            }
+            return false;
+        }
+    };
+
+
+    private void selectReminder(int mClickID) {
+
+        Log.d("LOG","ExtraID " + mClickID);
+
+        String mStringClickID = Integer.toString(mClickID);
+
+        Intent i = new Intent(this, AddReminderActivity.class);
+        //i.putExtra(EditReminderActivity.EXTRA_REMINDER_ID, mStringClickID);
+
+    }
+
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        mAdapter.setItemCount(getDefaultItemCount());
+    }
+
+
+    protected RecyclerView.LayoutManager getLayoutManager() {
+        return new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+    }
+
+
+    protected int getDefaultItemCount() {
+        return 100;
+    }
+
+
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
+        return id == R.id.action_settings || super.onOptionsItemSelected(item);
+    }
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+
+    public class SimpleAdapter extends RecyclerView.Adapter<SimpleAdapter.VerticalItemHolder> {
+
+        private ArrayList<ReminderItem> mItems;
+        private SparseBooleanArray selectedItems;
+
+
+        public SimpleAdapter() {
+            mItems = new ArrayList<>();
+            selectedItems = new SparseBooleanArray();
         }
 
-        return super.onOptionsItemSelected(item);
+
+        public void setItemCount(int count) {
+            mItems.clear();
+            mItems.addAll(generateDummyData(count));
+            notifyDataSetChanged();
+        }
+
+
+        public void onDeleteItem(int count) {
+            mItems.clear();
+            mItems.addAll(generateDummyData(count));
+        }
+
+
+        public void addItem() {
+            mItems.add(1, generateDummyItem());
+            notifyItemInserted(1);
+        }
+
+
+        public void removeItem() {
+            if (mItems.isEmpty()) return;
+            mItems.remove(0);
+            notifyItemRemoved(0);
+        }
+
+
+        public void removeItemSelected(int selected) {
+            if (mItems.isEmpty()) return;
+            mItems.remove(selected);
+            notifyItemRemoved(selected);
+        }
+
+
+        @Override
+        public VerticalItemHolder onCreateViewHolder(ViewGroup container, int viewType) {
+            LayoutInflater inflater = LayoutInflater.from(container.getContext());
+            View root = inflater.inflate(R.layout.recycle_items, container, false);
+
+            return new VerticalItemHolder(root, this);
+        }
+
+        @Override
+        public void onBindViewHolder(VerticalItemHolder itemHolder, int position) {
+            ReminderItem item = mItems.get(position);
+
+            itemHolder.setReminderTitle(item.mTitle);
+            itemHolder.setReminderDateTime(item.mDate, item.mTime);
+            itemHolder.setReminderRepeatInfo(item.mRepeat, item.mRepeatNo, item.mRepeatType);
+            itemHolder.setActiveImage(item.mActive);
+        }
+
+        @Override
+        public int getItemCount() {
+            return mItems.size();
+        }
+
+
+        public  class ReminderItem {
+
+            public String mTitle;
+            public String mDate;
+            public String mTime;
+            public String mRepeat;
+            public String mRepeatNo;
+            public String mRepeatType;
+            public String mActive;
+
+
+            public ReminderItem(String Title, String Date, String Time, String Repeat, String RepeatNo, String RepeatType, String Active) {
+
+                this.mTitle = Title;
+                this.mDate = Date;
+                this.mTime = Time;
+                this.mRepeat = Repeat;
+                this.mRepeatNo = RepeatNo;
+                this.mRepeatType = RepeatType;
+                this.mActive = Active;
+            }
+        }
+
+
+        public  class VerticalItemHolder extends SwappingHolder
+                implements View.OnClickListener, View.OnLongClickListener {
+
+            private TextView mTitleText, mDateAndTimeText, mRepeatInfoText;
+            private ImageView mActiveImage , mThumbnailImage;
+            private ColorGenerator mColorGenerator = ColorGenerator.DEFAULT;
+            private TextDrawable mDrawableBuilder;
+            private SimpleAdapter mAdapter;
+
+
+            public VerticalItemHolder(View itemView, SimpleAdapter adapter) {
+
+                super(itemView, mMultiSelector);
+                itemView.setOnClickListener(this);
+                itemView.setOnLongClickListener(this);
+                itemView.setLongClickable(true);
+
+                mAdapter = adapter;
+
+                mTitleText = (TextView) itemView.findViewById(R.id.recycle_title);
+                mDateAndTimeText = (TextView) itemView.findViewById(R.id.recycle_date_time);
+                mRepeatInfoText = (TextView) itemView.findViewById(R.id.recycle_repeat_info);
+                mActiveImage = (ImageView) itemView.findViewById(R.id.active_image);
+                mThumbnailImage = (ImageView) itemView.findViewById(R.id.thumbnail_image);
+            }
+
+
+            @Override
+            public void onClick(View v) {
+
+                if (!mMultiSelector.tapSelection(this)) {
+
+                    mTempPost = mList.getChildAdapterPosition(v);
+
+                    Log.d("LOG", "Position " + mTempPost);
+
+                    int mReminderClickID = IDmap.get(mTempPost);
+
+                    Log.d("LOG", "ID " + mReminderClickID);
+
+                    selectReminder(mReminderClickID);
+
+                }else if(mMultiSelector.getSelectedPositions().isEmpty()){
+
+                    Log.d("LOG","CLEAR!!!!!!!!!!! ");
+                    mAdapter.setItemCount(getDefaultItemCount());
+
+                }
+            }
+
+
+            @Override
+            public boolean onLongClick(View v) {
+                ActionBarActivity activity = MainActivity.this;
+                activity.startSupportActionMode(mDeleteMode);
+                mMultiSelector.setSelected(this, true);
+                return true;
+            }
+
+
+            public void setReminderTitle(String title) {
+                mTitleText.setText(title);
+                String letter = "A";
+
+                if(title != null && !title.isEmpty()) {
+                    letter = title.substring(0, 1);
+                }
+
+                int color = mColorGenerator.getRandomColor();
+
+                mDrawableBuilder = TextDrawable.builder()
+                        .buildRound(letter, color);
+                mThumbnailImage.setImageDrawable(mDrawableBuilder);
+            }
+
+
+            public void setReminderDateTime(String date, String time) {
+                mDateAndTimeText.setText(date + "  " + time);
+            }
+
+
+            public void setReminderRepeatInfo(String repeat, String repeatNo, String repeatType) {
+
+                if(repeat.equals("true")){
+                    mRepeatInfoText.setText("Every " + repeatNo + " " + repeatType + "(s)");
+                }else if (repeat.equals("false")) {
+                    mRepeatInfoText.setText("Repeat Off");
+                }
+            }
+
+
+
+            public void setActiveImage(String active){
+
+                if(active.equals("true")){
+                    mActiveImage.setImageResource(R.drawable.ic_toggle_star);
+                }else if (active.equals("false")) {
+                    mActiveImage.setImageResource(R.drawable.ic_star_outline_grey600_24dp);
+                }
+            }
+        }
+
+        public  ReminderItem generateDummyItem() {
+            Random random = new Random();
+            return new ReminderItem("1", "2", "3", "4", "5", "6", "7");
+        }
+
+        public List<ReminderItem> generateDummyData(int count) {
+            ArrayList<SimpleAdapter.ReminderItem> items = new ArrayList<>();
+
+
+            List<Reminder> reminders = rb.getAllReminders();
+
+            List<String> Titles = new ArrayList<>();
+            List<String> Times = new ArrayList<>();
+            List<String> Dates = new ArrayList<>();
+            List<String> Repeats = new ArrayList<>();
+            List<String> RepeatNos = new ArrayList<>();
+            List<String> RepeatTypes = new ArrayList<>();
+            List<String> Actives = new ArrayList<>();
+
+            Map<String, String> map = new LinkedHashMap<>();
+
+            List<Integer> IDList= new ArrayList<>();
+
+            for (Reminder r : reminders) {
+
+                Titles.add(r.getTitle());
+                Times.add(r.getTime());
+                Dates.add(r.getDate());
+                Repeats.add(r.getRepeat());
+                RepeatNos.add(r.getRepeatNo());
+                RepeatTypes.add(r.getRepeatType());
+                Actives.add(r.getActive());
+            }
+
+
+            int i = 0;
+
+            for (Reminder r : reminders) {
+
+                String log = i + " || " + Titles.get(i) + " || " + Times.get(i) + " || " + Dates.get(i) + " || " + Repeats.get(i)
+                        + " || " + RepeatNos.get(i) + " || " + RepeatTypes.get(i) + " || " + Actives.get(i);
+                Log.d("Name: ", log);
+
+                items.add(new SimpleAdapter.ReminderItem(Titles.get(i), Times.get(i), Dates.get(i), Repeats.get(i),
+                        RepeatNos.get(i), RepeatTypes.get(i), Actives.get(i)));
+                i++;
+            }
+          return items;
+        }
     }
+
+
+
 }
