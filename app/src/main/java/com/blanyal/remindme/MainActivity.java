@@ -21,11 +21,13 @@
 package com.blanyal.remindme;
 
 import android.content.Intent;
+import android.os.Build;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
@@ -62,7 +64,13 @@ public class MainActivity extends ActionBarActivity {
     private SimpleAdapter mAdapter;
     private Toolbar mToolbar;
     private FloatingActionButton mAddReminderButton;
+    private int mTempPost;
+    private LinkedHashMap<Integer, Integer> IDmap = new LinkedHashMap<>();
+
+    private ReminderDatabase rb = new ReminderDatabase(this);
     private MultiSelector mMultiSelector = new MultiSelector();
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,12 +86,14 @@ public class MainActivity extends ActionBarActivity {
         mList.setLayoutManager(getLayoutManager());
         registerForContextMenu(mList);
 
+
         mAdapter = new SimpleAdapter();
         mAdapter.setItemCount(getDefaultItemCount());
         mList.setAdapter(mAdapter);
 
 
         mToolbar.setTitle(R.string.app_name);
+
 
         mAddReminderButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -109,6 +119,7 @@ public class MainActivity extends ActionBarActivity {
             getMenuInflater().inflate(R.menu.menu_add_reminder, menu);
             return true;
         }
+
 
         @Override
         public boolean onActionItemClicked(android.support.v7.view.ActionMode actionMode, MenuItem menuItem) {
@@ -143,9 +154,19 @@ public class MainActivity extends ActionBarActivity {
             }
             return false;
         }
-
-
     };
+
+
+    private void selectReminder(int mClickID) {
+
+        Log.d("LOG","ExtraID " + mClickID);
+
+        String mStringClickID = Integer.toString(mClickID);
+
+        Intent i = new Intent(this, AddReminderActivity.class);
+        //i.putExtra(EditReminderActivity.EXTRA_REMINDER_ID, mStringClickID);
+
+    }
 
 
     @Override
@@ -175,12 +196,7 @@ public class MainActivity extends ActionBarActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
+        return id == R.id.action_settings || super.onOptionsItemSelected(item);
     }
 
 
@@ -188,11 +204,10 @@ public class MainActivity extends ActionBarActivity {
 
         private ArrayList<ReminderItem> mItems;
         private SparseBooleanArray selectedItems;
-        private AdapterView.OnItemClickListener mOnItemClickListener;
 
 
         public SimpleAdapter() {
-            mItems = new ArrayList<ReminderItem>();
+            mItems = new ArrayList<>();
             selectedItems = new SparseBooleanArray();
         }
 
@@ -233,7 +248,7 @@ public class MainActivity extends ActionBarActivity {
         @Override
         public VerticalItemHolder onCreateViewHolder(ViewGroup container, int viewType) {
             LayoutInflater inflater = LayoutInflater.from(container.getContext());
-            View root = inflater.inflate(R.layout.recycle_item, container, false);
+            View root = inflater.inflate(R.layout.recycle_items, container, false);
 
             return new VerticalItemHolder(root, this);
         }
@@ -304,35 +319,34 @@ public class MainActivity extends ActionBarActivity {
                 mThumbnailImage = (ImageView) itemView.findViewById(R.id.thumbnail_image);
             }
 
+
             @Override
             public void onClick(View v) {
 
                 if (!mMultiSelector.tapSelection(this)) {
-                    //selectCrime(mCrime);
 
-                    mTempPost = mList.getChildPosition(v);
+                    mTempPost = mList.getChildAdapterPosition(v);
 
+                    Log.d("LOG", "Position " + mTempPost);
 
-                    //Log.d("LOG", "Position " + mTempPost);
+                    int mReminderClickID = IDmap.get(mTempPost);
 
-                    int mSubjectClickID = IDmap.get(mTempPost);
+                    Log.d("LOG", "ID " + mReminderClickID);
 
-                    //Log.d("LOG", "ID " + mSubjectClickID);
-
-
-                    selectSubject(mSubjectClickID);
-
+                    selectReminder(mReminderClickID);
 
                 }else if(mMultiSelector.getSelectedPositions().isEmpty()){
-                    //Log.d("LOG","CLEAR!!!!!!!!!!! ");
+
+                    Log.d("LOG","CLEAR!!!!!!!!!!! ");
                     mAdapter.setItemCount(getDefaultItemCount());
+
                 }
             }
 
 
             @Override
             public boolean onLongClick(View v) {
-                ActionBarActivity activity = (ActionBarActivity)getApplicationContext();
+                ActionBarActivity activity = MainActivity.this;
                 activity.startSupportActionMode(mDeleteMode);
                 mMultiSelector.setSelected(this, true);
                 return true;
@@ -387,102 +401,48 @@ public class MainActivity extends ActionBarActivity {
         }
 
         public List<ReminderItem> generateDummyData(int count) {
-            ArrayList<SimpleAdapter.ReminderItem> items = new ArrayList<SimpleAdapter.ReminderItem>();
+            ArrayList<SimpleAdapter.ReminderItem> items = new ArrayList<>();
 
 
-            List<Reminder> subjects = db.getAllSubjects();
+            List<Reminder> reminders = rb.getAllReminders();
 
-            List<String> subjectTitles =new ArrayList<String>();
-            List<String> startTime =new ArrayList<String>();
-            List<String> endTime =new ArrayList<String>();
-            List<String> starList =new ArrayList<String>();
-            List<String> daysList= new ArrayList<String>();
-            List<String> valList= new ArrayList<String>();
-            List<String> valList2= new ArrayList<String>();
+            List<String> Titles = new ArrayList<>();
+            List<String> Times = new ArrayList<>();
+            List<String> Dates = new ArrayList<>();
+            List<String> Repeats = new ArrayList<>();
+            List<String> RepeatNos = new ArrayList<>();
+            List<String> RepeatTypes = new ArrayList<>();
+            List<String> Actives = new ArrayList<>();
 
-            Map<String, String> map = new LinkedHashMap<String, String>();
+            Map<String, String> map = new LinkedHashMap<>();
 
+            List<Integer> IDList= new ArrayList<>();
 
+            for (Reminder r : reminders) {
 
-            List<Integer> IDList= new ArrayList<Integer>();
-
-
-
-            for (Subject cn : subjects) {
-
-                subjectTitles.add(cn.getSubjectTitle());
-                startTime.add(cn.getStartTime());
-                endTime.add(cn.getEndTime());
-                starList.add(cn.getStar());
-                daysList.add(cn.getDay());
-                IDList.add(cn.getID());
-
+                Titles.add(r.getTitle());
+                Times.add(r.getTime());
+                Dates.add(r.getDate());
+                Repeats.add(r.getRepeat());
+                RepeatNos.add(r.getRepeatNo());
+                RepeatTypes.add(r.getRepeatType());
+                Actives.add(r.getActive());
             }
 
 
-            List<TimeSort> timeSortList=new ArrayList<TimeSort>();
+            int i = 0;
 
+            for (Reminder r : reminders) {
 
-            int key=0;
+                String log = i + " || " + Titles.get(i) + " || " + Times.get(i) + " || " + Dates.get(i) + " || " + Repeats.get(i)
+                        + " || " + RepeatNos.get(i) + " || " + RepeatTypes.get(i) + " || " + Actives.get(i);
+                Log.d("Name: ", log);
 
-            for(int k=0;k<subjectTitles.size();k++){
-                valList.add(Integer.toString(key));
-
-                map.put(startTime.get(k),Integer.toString(key));
-                String log =Integer.toString((key))+"*******"+startTime.get(k);
-                //Log.d("Name: ", log);
-
-
-                timeSortList.add(new TimeSort(key,startTime.get(k)));
-
-
-                key++;
+                items.add(new SimpleAdapter.ReminderItem(Titles.get(i), Times.get(i), Dates.get(i), Repeats.get(i),
+                        RepeatNos.get(i), RepeatTypes.get(i), Actives.get(i)));
+                i++;
             }
-
-
-
-            for(TimeSort item:timeSortList){
-                String log =item.getIndex()+"!!!!!!!!"+item.getSortStartTime();
-                //Log.d("Name: ", log);
-            }
-
-
-            Collections.sort(timeSortList, new TimeComparator());
-
-
-
-            for(TimeSort item:timeSortList){
-                String log =item.getIndex()+"^^^^^^^^"+item.getSortStartTime();
-                //Log.d("Name: ", log);
-            }
-
-
-
-
-
-            int i=0;
-
-            for(TimeSort item:timeSortList) {
-                int k=item.getIndex();
-
-
-                String log =k + " || " + subjectTitles.get(k) + " || " + startTime.get(k) + " || " + endTime.get(k) + " || " + IDList.get(k);
-                //Log.d("Name: ", log);
-
-                if(daysList.get(k).equals("Monday")) {
-                    items.add(new SimpleAdapter.TimeTableItem(subjectTitles.get(k), startTime.get(k) + " to " + endTime.get(k), starList.get(k)));
-                    IDmap.put(i,IDList.get(k));
-                    i++;
-                }
-
-            }
-
-
-
-
-
-
-            return items;
+          return items;
         }
     }
 
