@@ -15,10 +15,7 @@
  */
 
 
-
-
 package com.blanyal.remindme;
-
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -42,16 +39,13 @@ import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 import com.wdullaer.materialdatetimepicker.time.RadialPickerLayout;
 import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
 
-import java.text.DecimalFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
 
-public class AddReminderActivity extends ActionBarActivity implements
+public class ReminderAddActivity extends ActionBarActivity implements
         TimePickerDialog.OnTimeSetListener,
         DatePickerDialog.OnDateSetListener{
-
     private Toolbar mToolbar;
     private EditText mReminderText;
     private TextView mDateText, mTimeText, mRepeatText, mRepeatNoText, mRepeatTypeText;
@@ -73,7 +67,6 @@ public class AddReminderActivity extends ActionBarActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_reminder);
 
-
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         mReminderText = (EditText) findViewById(R.id.reminder_title);
         mDateText = (TextView) findViewById(R.id.set_date);
@@ -82,18 +75,15 @@ public class AddReminderActivity extends ActionBarActivity implements
         mRepeatNoText = (TextView) findViewById(R.id.set_repeat_no);
         mRepeatTypeText = (TextView) findViewById(R.id.set_repeat_type);
 
-
         setSupportActionBar(mToolbar);
         getSupportActionBar().setTitle(R.string.title_activity_add_reminder);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
 
-
         mActive = "true";
         mRepeat = "true";
         mRepeatNo = Integer.toString(1);
         mRepeatType = "Hour";
-
 
         mCalendar = Calendar.getInstance();
         mHour = mCalendar.get(Calendar.HOUR_OF_DAY);
@@ -102,16 +92,12 @@ public class AddReminderActivity extends ActionBarActivity implements
         mMonth = mCalendar.get(Calendar.MONTH);
         mDay = mCalendar.get(Calendar.DATE);
 
-
         mDate = mDay + "/" + mMonth + "/" + mYear;
         mTime = mHour + ":" + mMinute;
 
-
         mReminderText.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
@@ -120,9 +106,7 @@ public class AddReminderActivity extends ActionBarActivity implements
             }
 
             @Override
-            public void afterTextChanged(Editable s) {
-
-            }
+            public void afterTextChanged(Editable s) {}
         });
 
         mDateText.setText(mDate);
@@ -130,7 +114,6 @@ public class AddReminderActivity extends ActionBarActivity implements
         mRepeatNoText.setText(mRepeatNo);
         mRepeatTypeText.setText(mRepeatType);
         mRepeatText.setText("Every " + mRepeatNo + " " + mRepeatType + "(s)");
-
     }
 
 
@@ -165,6 +148,7 @@ public class AddReminderActivity extends ActionBarActivity implements
         mTimeText.setText(mTime);
     }
 
+
     @Override
     public void onDateSet(DatePickerDialog view, int year, int monthOfYear, int dayOfMonth) {
         mDate = dayOfMonth + "/" + monthOfYear + "/" + year;
@@ -178,7 +162,6 @@ public class AddReminderActivity extends ActionBarActivity implements
         mFAB2 = (FloatingActionButton) findViewById(R.id.starred2);
         mFAB2.setVisibility(View.VISIBLE);
         mActive = "true";
-        Log.d("Active", mActive);
     }
 
 
@@ -188,13 +171,11 @@ public class AddReminderActivity extends ActionBarActivity implements
         mFAB1 = (FloatingActionButton) findViewById(R.id.starred1);
         mFAB1.setVisibility(View.VISIBLE);
         mActive = "false";
-        Log.d("Active", mActive);
     }
 
 
     public void onSwitchRepeat(View view) {
         boolean on = ((Switch) view).isChecked();
-
         if (on) {
             mRepeat = "true";
             mRepeatText.setText("Every " + mRepeatNo + " " + mRepeatType + "(s)");
@@ -206,7 +187,6 @@ public class AddReminderActivity extends ActionBarActivity implements
 
 
     public void selectRepeatType(View v){
-
         final String[] items = new String[5];
 
         items[0] = "Minute";
@@ -235,7 +215,6 @@ public class AddReminderActivity extends ActionBarActivity implements
     public void setRepeatNo(View v){
         AlertDialog.Builder alert = new AlertDialog.Builder(this);
         alert.setTitle("Enter Number");
-        //alert.setMessage("Enter Number");
 
         final EditText input = new EditText(this);
         input.setInputType(InputType.TYPE_CLASS_NUMBER);
@@ -249,7 +228,6 @@ public class AddReminderActivity extends ActionBarActivity implements
                         mRepeatText.setText("Every " + mRepeatNo + " " + mRepeatType + "(s)");
                     }
                 });
-
         alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
                 // do nothing
@@ -260,7 +238,6 @@ public class AddReminderActivity extends ActionBarActivity implements
 
 
     public void saveReminder(){
-
         ReminderDatabase rb = new ReminderDatabase(this);
 
         // Inserting Reminder
@@ -275,7 +252,6 @@ public class AddReminderActivity extends ActionBarActivity implements
 
             Log.d("Name: ", log);
         }
-
         Toast.makeText(getApplicationContext(), "Saved",
                 Toast.LENGTH_SHORT).show();
 
@@ -326,5 +302,4 @@ public class AddReminderActivity extends ActionBarActivity implements
                 return super.onOptionsItemSelected(item);
         }
     }
-
 }

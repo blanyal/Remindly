@@ -9,6 +9,7 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
+
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name" >
@@ -18,8 +19,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".AddReminderActivity"
+        <activity android:name=".ReminderAddActivity"
                   android:label="@string/title_activity_add_reminder"/>
+        <activity android:name=".ReminderEditActivity"
+                  android:label="@string/title_activity_edit_reminder"/>
+
     </application>
 
 </manifest>
