@@ -18,21 +18,18 @@
 package com.blanyal.remindme;
 
 import android.content.Intent;
-import android.os.Build;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.util.SparseBooleanArray;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -50,11 +47,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Random;
 
 
 public class MainActivity extends ActionBarActivity {
@@ -64,10 +58,8 @@ public class MainActivity extends ActionBarActivity {
     private FloatingActionButton mAddReminderButton;
     private int mTempPost;
     private LinkedHashMap<Integer, Integer> IDmap = new LinkedHashMap<>();
-
     private ReminderDatabase rb;
     private MultiSelector mMultiSelector = new MultiSelector();
-
 
 
     @Override
@@ -93,11 +85,10 @@ public class MainActivity extends ActionBarActivity {
         mAddReminderButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(v.getContext(), AddReminderActivity.class);
+                Intent intent = new Intent(v.getContext(), ReminderAddActivity.class);
                 startActivity(intent);
             }
         });
-
     }
 
 
@@ -121,14 +112,11 @@ public class MainActivity extends ActionBarActivity {
             switch (menuItem.getItemId()) {
 
                 case R.id.discard_reminder:
-
                     actionMode.finish();
 
                     for (int i = IDmap.size(); i >= 0; i--) {
                         if (mMultiSelector.isSelected(i, 0)) {
                             int id = IDmap.get(i);
-
-                            //Log.d("ID: ", Integer.toString(id));
 
                             Reminder temp = rb.getReminder(id);
                             rb.deleteReminder(temp);
@@ -144,9 +132,7 @@ public class MainActivity extends ActionBarActivity {
                             Toast.LENGTH_SHORT).show();
                     return true;
 
-
                 case R.id.save_reminder:
-
                     actionMode.finish();
                     mMultiSelector.clearSelections();
                     return true;
@@ -160,14 +146,18 @@ public class MainActivity extends ActionBarActivity {
 
 
     private void selectReminder(int mClickID) {
-
-        Log.d("LOG","ExtraID " + mClickID);
-
+        Log.d("LOG", "ExtraID " + mClickID);
         String mStringClickID = Integer.toString(mClickID);
 
-        Intent i = new Intent(this, AddReminderActivity.class);
-        //i.putExtra(EditReminderActivity.EXTRA_REMINDER_ID, mStringClickID);
+        Intent i = new Intent(this, ReminderEditActivity.class);
+        i.putExtra(ReminderEditActivity.EXTRA_REMINDER_ID, mStringClickID);
+        startActivityForResult(i, 1);
+    }
 
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        mAdapter.setItemCount(getDefaultItemCount());
     }
 
 
@@ -203,9 +193,7 @@ public class MainActivity extends ActionBarActivity {
 
 
     public class SimpleAdapter extends RecyclerView.Adapter<SimpleAdapter.VerticalItemHolder> {
-
         private ArrayList<ReminderItem> mItems;
-
 
         public SimpleAdapter() {
             mItems = new ArrayList<>();
@@ -225,19 +213,6 @@ public class MainActivity extends ActionBarActivity {
         }
 
 
-        public void addItem() {
-            mItems.add(1, generateDummyItem());
-            notifyItemInserted(1);
-        }
-
-
-        public void removeItem() {
-            if (mItems.isEmpty()) return;
-            mItems.remove(0);
-            notifyItemRemoved(0);
-        }
-
-
         public void removeItemSelected(int selected) {
             if (mItems.isEmpty()) return;
             mItems.remove(selected);
@@ -253,15 +228,16 @@ public class MainActivity extends ActionBarActivity {
             return new VerticalItemHolder(root, this);
         }
 
+
         @Override
         public void onBindViewHolder(VerticalItemHolder itemHolder, int position) {
             ReminderItem item = mItems.get(position);
-
             itemHolder.setReminderTitle(item.mTitle);
             itemHolder.setReminderDateTime(item.mDateTime);
             itemHolder.setReminderRepeatInfo(item.mRepeat, item.mRepeatNo, item.mRepeatType);
             itemHolder.setActiveImage(item.mActive);
         }
+
 
         @Override
         public int getItemCount() {
@@ -270,7 +246,6 @@ public class MainActivity extends ActionBarActivity {
 
 
         public  class ReminderItem {
-
             public String mTitle;
             public String mDateTime;
             public String mRepeat;
@@ -280,7 +255,6 @@ public class MainActivity extends ActionBarActivity {
 
 
             public ReminderItem(String Title, String DateTime, String Repeat, String RepeatNo, String RepeatType, String Active) {
-
                 this.mTitle = Title;
                 this.mDateTime = DateTime;
                 this.mRepeat = Repeat;
@@ -292,7 +266,6 @@ public class MainActivity extends ActionBarActivity {
 
 
         public class DateTimeComparator implements Comparator {
-
             DateFormat f = new SimpleDateFormat("dd/mm/yyyy hh:mm");
 
             public int compare(Object a, Object b) {
@@ -311,7 +284,6 @@ public class MainActivity extends ActionBarActivity {
 
         public  class VerticalItemHolder extends SwappingHolder
                 implements View.OnClickListener, View.OnLongClickListener {
-
             private TextView mTitleText, mDateAndTimeText, mRepeatInfoText;
             private ImageView mActiveImage , mThumbnailImage;
             private ColorGenerator mColorGenerator = ColorGenerator.DEFAULT;
@@ -320,7 +292,6 @@ public class MainActivity extends ActionBarActivity {
 
 
             public VerticalItemHolder(View itemView, SimpleAdapter adapter) {
-
                 super(itemView, mMultiSelector);
                 itemView.setOnClickListener(this);
                 itemView.setOnLongClickListener(this);
@@ -338,22 +309,13 @@ public class MainActivity extends ActionBarActivity {
 
             @Override
             public void onClick(View v) {
-
                 if (!mMultiSelector.tapSelection(this)) {
-
                     mTempPost = mList.getChildAdapterPosition(v);
 
-                    Log.d("LOG", "Position " + mTempPost);
-
                     int mReminderClickID = IDmap.get(mTempPost);
-
-                    Log.d("LOG", "ID " + mReminderClickID);
-
                     selectReminder(mReminderClickID);
 
                 } else if(mMultiSelector.getSelectedPositions().isEmpty()){
-
-                    Log.d("LOG","CLEAR!!!!!!!!!!! ");
                     mAdapter.setItemCount(getDefaultItemCount());
                 }
             }
@@ -390,7 +352,6 @@ public class MainActivity extends ActionBarActivity {
 
 
             public void setReminderRepeatInfo(String repeat, String repeatNo, String repeatType) {
-
                 if(repeat.equals("true")){
                     mRepeatInfoText.setText("Every " + repeatNo + " " + repeatType + "(s)");
                 }else if (repeat.equals("false")) {
@@ -401,7 +362,6 @@ public class MainActivity extends ActionBarActivity {
 
 
             public void setActiveImage(String active){
-
                 if(active.equals("true")){
                     mActiveImage.setImageResource(R.drawable.ic_toggle_star);
                 }else if (active.equals("false")) {
@@ -410,13 +370,14 @@ public class MainActivity extends ActionBarActivity {
             }
         }
 
+
         public  ReminderItem generateDummyItem() {
             return new ReminderItem("1", "2", "3", "4", "5", "6");
         }
 
+
         public List<ReminderItem> generateData(int count) {
             ArrayList<SimpleAdapter.ReminderItem> items = new ArrayList<>();
-
 
             List<Reminder> reminders = rb.getAllReminders();
 
@@ -427,13 +388,10 @@ public class MainActivity extends ActionBarActivity {
             List<String> Actives = new ArrayList<>();
             List<String> DateAndTime = new ArrayList<>();
             List<Integer> IDList= new ArrayList<>();
-            Map<String, String> map = new LinkedHashMap<>();
-
-
+            List<DateTimeSorter> DateTimeSortList = new ArrayList<>();
 
 
             for (Reminder r : reminders) {
-
                 Titles.add(r.getTitle());
                 DateAndTime.add(r.getDate() + " " + r.getTime());
                 Repeats.add(r.getRepeat());
@@ -444,20 +402,14 @@ public class MainActivity extends ActionBarActivity {
             }
 
 
-            List<DateTimeSorter> DateTimeSortList = new ArrayList<>();
+            int key = 0;
 
-
-            int key=0;
-
-            for(int k=0;k<Titles.size();k++){
-                map.put(DateAndTime.get(k),Integer.toString(key));
+            for(int k = 0; k<Titles.size(); k++){
                 DateTimeSortList.add(new DateTimeSorter(key, DateAndTime.get(k)));
                 key++;
             }
 
-
             Collections.sort(DateTimeSortList, new DateTimeComparator());
-
 
             int k = 0;
 
