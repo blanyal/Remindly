@@ -19,7 +19,6 @@ package com.blanyal.remindme;
 
 
 public class Reminder {
-
     private int mID;
     private String mTitle;
     private String mDate;
@@ -40,7 +39,6 @@ public class Reminder {
         mRepeatType = RepeatType;
         mActive = Active;
     }
-
 
     public Reminder(String Title, String Date, String Time, String Repeat, String RepeatNo, String RepeatType, String Active){
         mTitle = Title;

@@ -61,7 +61,6 @@ public class MainActivity extends ActionBarActivity {
     private ReminderDatabase rb;
     private MultiSelector mMultiSelector = new MultiSelector();
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -91,12 +90,10 @@ public class MainActivity extends ActionBarActivity {
         });
     }
 
-
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         getMenuInflater().inflate(R.menu.menu_add_reminder, menu);
     }
-
 
     private android.support.v7.view.ActionMode.Callback mDeleteMode = new ModalMultiSelectorCallback(mMultiSelector) {
 
@@ -105,7 +102,6 @@ public class MainActivity extends ActionBarActivity {
             getMenuInflater().inflate(R.menu.menu_add_reminder, menu);
             return true;
         }
-
 
         @Override
         public boolean onActionItemClicked(android.support.v7.view.ActionMode actionMode, MenuItem menuItem) {
@@ -144,7 +140,6 @@ public class MainActivity extends ActionBarActivity {
         }
     };
 
-
     private void selectReminder(int mClickID) {
         Log.d("LOG", "ExtraID " + mClickID);
         String mStringClickID = Integer.toString(mClickID);
@@ -154,12 +149,10 @@ public class MainActivity extends ActionBarActivity {
         startActivityForResult(i, 1);
     }
 
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         mAdapter.setItemCount(getDefaultItemCount());
     }
-
 
     @Override
     public void onResume(){
@@ -167,17 +160,13 @@ public class MainActivity extends ActionBarActivity {
         mAdapter.setItemCount(getDefaultItemCount());
     }
 
-
     protected RecyclerView.LayoutManager getLayoutManager() {
         return new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
     }
 
-
     protected int getDefaultItemCount() {
         return 100;
     }
-
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -191,7 +180,6 @@ public class MainActivity extends ActionBarActivity {
         return id == R.id.action_settings || super.onOptionsItemSelected(item);
     }
 
-
     public class SimpleAdapter extends RecyclerView.Adapter<SimpleAdapter.VerticalItemHolder> {
         private ArrayList<ReminderItem> mItems;
 
@@ -199,26 +187,22 @@ public class MainActivity extends ActionBarActivity {
             mItems = new ArrayList<>();
         }
 
-
         public void setItemCount(int count) {
             mItems.clear();
             mItems.addAll(generateData(count));
             notifyDataSetChanged();
         }
 
-
         public void onDeleteItem(int count) {
             mItems.clear();
             mItems.addAll(generateData(count));
         }
-
 
         public void removeItemSelected(int selected) {
             if (mItems.isEmpty()) return;
             mItems.remove(selected);
             notifyItemRemoved(selected);
         }
-
 
         @Override
         public VerticalItemHolder onCreateViewHolder(ViewGroup container, int viewType) {
@@ -227,7 +211,6 @@ public class MainActivity extends ActionBarActivity {
 
             return new VerticalItemHolder(root, this);
         }
-
 
         @Override
         public void onBindViewHolder(VerticalItemHolder itemHolder, int position) {
@@ -238,12 +221,10 @@ public class MainActivity extends ActionBarActivity {
             itemHolder.setActiveImage(item.mActive);
         }
 
-
         @Override
         public int getItemCount() {
             return mItems.size();
         }
-
 
         public  class ReminderItem {
             public String mTitle;
@@ -252,7 +233,6 @@ public class MainActivity extends ActionBarActivity {
             public String mRepeatNo;
             public String mRepeatType;
             public String mActive;
-
 
             public ReminderItem(String Title, String DateTime, String Repeat, String RepeatNo, String RepeatType, String Active) {
                 this.mTitle = Title;
@@ -263,7 +243,6 @@ public class MainActivity extends ActionBarActivity {
                 this.mActive = Active;
             }
         }
-
 
         public class DateTimeComparator implements Comparator {
             DateFormat f = new SimpleDateFormat("dd/mm/yyyy hh:mm");
@@ -280,8 +259,6 @@ public class MainActivity extends ActionBarActivity {
             }
         }
 
-
-
         public  class VerticalItemHolder extends SwappingHolder
                 implements View.OnClickListener, View.OnLongClickListener {
             private TextView mTitleText, mDateAndTimeText, mRepeatInfoText;
@@ -289,7 +266,6 @@ public class MainActivity extends ActionBarActivity {
             private ColorGenerator mColorGenerator = ColorGenerator.DEFAULT;
             private TextDrawable mDrawableBuilder;
             private SimpleAdapter mAdapter;
-
 
             public VerticalItemHolder(View itemView, SimpleAdapter adapter) {
                 super(itemView, mMultiSelector);
@@ -306,7 +282,6 @@ public class MainActivity extends ActionBarActivity {
                 mThumbnailImage = (ImageView) itemView.findViewById(R.id.thumbnail_image);
             }
 
-
             @Override
             public void onClick(View v) {
                 if (!mMultiSelector.tapSelection(this)) {
@@ -320,7 +295,6 @@ public class MainActivity extends ActionBarActivity {
                 }
             }
 
-
             @Override
             public boolean onLongClick(View v) {
                 ActionBarActivity activity = MainActivity.this;
@@ -328,7 +302,6 @@ public class MainActivity extends ActionBarActivity {
                 mMultiSelector.setSelected(this, true);
                 return true;
             }
-
 
             public void setReminderTitle(String title) {
                 mTitleText.setText(title);
@@ -345,11 +318,9 @@ public class MainActivity extends ActionBarActivity {
                 mThumbnailImage.setImageDrawable(mDrawableBuilder);
             }
 
-
             public void setReminderDateTime(String datetime) {
                 mDateAndTimeText.setText(datetime);
             }
-
 
             public void setReminderRepeatInfo(String repeat, String repeatNo, String repeatType) {
                 if(repeat.equals("true")){
@@ -358,8 +329,6 @@ public class MainActivity extends ActionBarActivity {
                     mRepeatInfoText.setText("Repeat Off");
                 }
             }
-
-
 
             public void setActiveImage(String active){
                 if(active.equals("true")){
@@ -370,11 +339,9 @@ public class MainActivity extends ActionBarActivity {
             }
         }
 
-
-        public  ReminderItem generateDummyItem() {
+        public  ReminderItem generateDummyData() {
             return new ReminderItem("1", "2", "3", "4", "5", "6");
         }
-
 
         public List<ReminderItem> generateData(int count) {
             ArrayList<SimpleAdapter.ReminderItem> items = new ArrayList<>();
@@ -390,7 +357,6 @@ public class MainActivity extends ActionBarActivity {
             List<Integer> IDList= new ArrayList<>();
             List<DateTimeSorter> DateTimeSortList = new ArrayList<>();
 
-
             for (Reminder r : reminders) {
                 Titles.add(r.getTitle());
                 DateAndTime.add(r.getDate() + " " + r.getTime());
@@ -400,7 +366,6 @@ public class MainActivity extends ActionBarActivity {
                 Actives.add(r.getActive());
                 IDList.add(r.getID());
             }
-
 
             int key = 0;
 
@@ -428,7 +393,4 @@ public class MainActivity extends ActionBarActivity {
           return items;
         }
     }
-
-
-
 }
