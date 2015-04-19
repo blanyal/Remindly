@@ -51,6 +51,7 @@ public class ReminderEditActivity extends ActionBarActivity implements
     private TextView mDateText, mTimeText, mRepeatText, mRepeatNoText, mRepeatTypeText;
     private FloatingActionButton mFAB1;
     private FloatingActionButton mFAB2;
+    private Switch mRepeatSwitch;
     private Calendar mCalendar;
     private int mYear, mMonth, mHour, mMinute, mDay;
     private String mTitle;
@@ -87,26 +88,12 @@ public class ReminderEditActivity extends ActionBarActivity implements
         mRepeatTypeText = (TextView) findViewById(R.id.set_repeat_type);
         mFAB1 = (FloatingActionButton) findViewById(R.id.starred1);
         mFAB2 = (FloatingActionButton) findViewById(R.id.starred2);
+        mRepeatSwitch = (Switch) findViewById(R.id.repeat_switch);
 
         setSupportActionBar(mToolbar);
         getSupportActionBar().setTitle(R.string.title_activity_add_reminder);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
-
-        mActive = "true";
-        mRepeat = "true";
-        mRepeatNo = Integer.toString(1);
-        mRepeatType = "Hour";
-
-        mCalendar = Calendar.getInstance();
-        mHour = mCalendar.get(Calendar.HOUR_OF_DAY);
-        mMinute = mCalendar.get(Calendar.MINUTE);
-        mYear = mCalendar.get(Calendar.YEAR);
-        mMonth = mCalendar.get(Calendar.MONTH);
-        mDay = mCalendar.get(Calendar.DATE);
-
-        mDate = mDay + "/" + mMonth + "/" + mYear;
-        mTime = mHour + ":" + mMinute;
 
         mTitleText.addTextChangedListener(new TextWatcher() {
             @Override
@@ -178,6 +165,14 @@ public class ReminderEditActivity extends ActionBarActivity implements
             mFAB1.setVisibility(View.GONE);
             mFAB2.setVisibility(View.VISIBLE);
         }
+
+        if (mRepeat.equals("false")) {
+            mRepeatSwitch.setChecked(false);
+            mRepeatText.setText(R.string.repeat_off);
+
+        } else if (mRepeat.equals("true")) {
+            mRepeatSwitch.setChecked(true);
+        }
     }
 
     @Override
@@ -228,6 +223,7 @@ public class ReminderEditActivity extends ActionBarActivity implements
 
     @Override
     public void onDateSet(DatePickerDialog view, int year, int monthOfYear, int dayOfMonth) {
+        monthOfYear ++;
         mDate = dayOfMonth + "/" + monthOfYear + "/" + year;
         mDateText.setText(mDate);
     }
@@ -253,6 +249,7 @@ public class ReminderEditActivity extends ActionBarActivity implements
         if (on) {
             mRepeat = "true";
             mRepeatText.setText("Every " + mRepeatNo + " " + mRepeatType + "(s)");
+
         } else {
             mRepeat = "false";
             mRepeatText.setText(R.string.repeat_off);
@@ -347,6 +344,7 @@ public class ReminderEditActivity extends ActionBarActivity implements
 
                 if (mTitleText.getText().toString().length() == 0)
                     mTitleText.setError("Reminder Title cannot be blank!");
+
                 else {
                     updateReminder();
                 }

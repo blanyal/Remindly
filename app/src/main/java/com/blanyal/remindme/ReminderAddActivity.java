@@ -100,7 +100,7 @@ public class ReminderAddActivity extends ActionBarActivity implements
         mHour = mCalendar.get(Calendar.HOUR_OF_DAY);
         mMinute = mCalendar.get(Calendar.MINUTE);
         mYear = mCalendar.get(Calendar.YEAR);
-        mMonth = mCalendar.get(Calendar.MONTH);
+        mMonth = mCalendar.get(Calendar.MONTH) + 1;
         mDay = mCalendar.get(Calendar.DATE);
 
         mDate = mDay + "/" + mMonth + "/" + mYear;
@@ -209,6 +209,7 @@ public class ReminderAddActivity extends ActionBarActivity implements
 
     @Override
     public void onDateSet(DatePickerDialog view, int year, int monthOfYear, int dayOfMonth) {
+        monthOfYear ++;
         mDate = dayOfMonth + "/" + monthOfYear + "/" + year;
         mDateText.setText(mDate);
     }
