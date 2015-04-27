@@ -17,33 +17,69 @@
 
 package com.blanyal.remindme;
 
+
 import android.app.AlarmManager;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.graphics.BitmapFactory;
+import android.media.RingtoneManager;
+import android.os.SystemClock;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.content.WakefulBroadcastReceiver;
 
-import java.util.Calendar;
 
-
-public class ReminderAlarm implements Runnable{
-    private final Calendar date;
-    private final AlarmManager am;
-    private final Context context;
-
-    public ReminderAlarm(Context context, Calendar date) {
-        this.context = context;
-        this.am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-        this.date = date;
-    }
+public class ReminderAlarm extends WakefulBroadcastReceiver {
+    AlarmManager mAlarmManager;
+    PendingIntent mPendingIntent;
 
     @Override
-    public void run() {
-        // Request to start are service when the alarm date is upon us
-        Intent intent = new Intent(context, ReminderNotifyService.class);
-        intent.putExtra(ReminderNotifyService.INTENT_NOTIFY, true);
-        PendingIntent pendingIntent = PendingIntent.getService(context, 0, intent, 0);
+    public void onReceive(Context context, Intent intent) {
+        NotificationCompat.Builder nBuilder = new NotificationCompat.Builder(context)
+                .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_launcher))
+                .setTicker("Reminder")
+                .setContentTitle(context.getResources().getString(R.string.app_name))
+                .setContentText("This is a reminder")
+                .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
+                .setPriority(NotificationCompat.PRIORITY_MAX)
+                .setOnlyAlertOnce(true);
+        NotificationManager nManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        nManager.notify(1, nBuilder.build());
+    }
 
-        // Sets an alarm - note this alarm will be lost if the phone is turned off and on again
-        am.set(AlarmManager.RTC, date.getTimeInMillis(), pendingIntent);
+    public void setAlarm(Context context, int milliseconds)
+    {
+        mAlarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        mPendingIntent = PendingIntent.getBroadcast(context, 0, new Intent(context, ReminderAlarm.class), 0);
+
+        // Fire alarm every "milliseconds"
+        mAlarmManager.setInexactRepeating(AlarmManager.ELAPSED_REALTIME,
+                SystemClock.elapsedRealtime() + milliseconds,
+                milliseconds,
+                mPendingIntent);
+
+        // Restart alarm if device is rebooted
+        ComponentName receiver = new ComponentName(context, BootReceiver.class);
+        PackageManager pm = context.getPackageManager();
+        pm.setComponentEnabledSetting(receiver,
+                PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
+                PackageManager.DONT_KILL_APP);
+    }
+
+    public void cancelAlarm(Context context)
+    {
+        mAlarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        mPendingIntent = PendingIntent.getBroadcast(context, 0, new Intent(context, ReminderAlarm.class), 0);
+        mAlarmManager.cancel(mPendingIntent);
+
+        // Disable BootReceiver so that alarm won't start again if device is rebooted
+        ComponentName receiver = new ComponentName(context, BootReceiver.class);
+        PackageManager pm = context.getPackageManager();
+        pm.setComponentEnabledSetting(receiver,
+                PackageManager.COMPONENT_ENABLED_STATE_DISABLED,
+                PackageManager.DONT_KILL_APP);
     }
 }

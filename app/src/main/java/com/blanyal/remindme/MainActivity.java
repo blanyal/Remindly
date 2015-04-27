@@ -61,8 +61,6 @@ public class MainActivity extends AppCompatActivity {
     private LinkedHashMap<Integer, Integer> IDmap = new LinkedHashMap<>();
     private ReminderDatabase rb;
     private MultiSelector mMultiSelector = new MultiSelector();
-    private ReminderScheduleClient scheduleClient;
-    private Calendar c;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,28 +89,6 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-
-        scheduleClient = new ReminderScheduleClient(this);
-        scheduleClient.doBindService();
-
-        c = Calendar.getInstance();
-        c.set(Calendar.YEAR, 2015);
-        c.set(Calendar.MONTH, 3);
-        c.set(Calendar.DATE, 27);
-        c.set(Calendar.HOUR_OF_DAY, 10);
-        c.set(Calendar.MINUTE, 14);
-        c.set(Calendar.SECOND, 0);
-        // Ask our service to set an alarm for that date, this activity talks to the client that talks to the service
-
-    }
-
-    @Override
-    protected void onStop() {
-        // When our activity is stopped ensure we also stop the connection to the service
-        // this stops us leaking our activity into the system *bad*
-        if(scheduleClient != null)
-            scheduleClient.doUnbindService();
-        super.onStop();
     }
 
     @Override
@@ -166,8 +142,6 @@ public class MainActivity extends AppCompatActivity {
     };
 
     private void selectReminder(int mClickID) {
-        scheduleClient.setAlarmForNotification(c);
-
         Log.d("LOG", "ExtraID " + mClickID);
         String mStringClickID = Integer.toString(mClickID);
 
