@@ -1,3 +1,20 @@
+/*
+ * Copyright 2015 Blanyal D'souza.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+
 package com.blanyal.remindme;
 
 import android.app.Notification;
@@ -11,6 +28,7 @@ import android.util.Log;
 
 
 public class ReminderNotifyService extends Service {
+    private final IBinder mBinder = new ServiceBinder();
 
     public class ServiceBinder extends Binder {
         ReminderNotifyService getService() {
@@ -21,8 +39,7 @@ public class ReminderNotifyService extends Service {
     // Unique id to identify the notification.
     private static final int NOTIFICATION = 123;
     // Name of an intent extra we can use to identify if this service was started to create a notification
-    public static final String INTENT_NOTIFY = "INTENT_NOTIFY";
-    // The system notification manager
+    public static final String INTENT_NOTIFY = "REMINDLY_INTENT_NOTIFY";
     private NotificationManager mNM;
 
     @Override
@@ -35,11 +52,9 @@ public class ReminderNotifyService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.i("LocalService", "Received start id " + startId + ": " + intent);
 
-        // If this service was started by out ReminderAlarm intent then we want to show our notification
         if(intent.getBooleanExtra(INTENT_NOTIFY, false))
             showNotification();
 
-        // We don't care if this service is stopped as we have already delivered our notification
         return START_NOT_STICKY;
     }
 
@@ -48,19 +63,13 @@ public class ReminderNotifyService extends Service {
         return mBinder;
     }
 
-    // This is the object that receives interactions from clients
-    private final IBinder mBinder = new ServiceBinder();
 
-    /**
-     * Creates a notification and shows it in the OS drag-down status bar
-     */
+
+    // Creates a notification and displays it in the notification drawer
     private void showNotification() {
-        // This is the 'title' of the notification
-        CharSequence title = "Alarm!!";
-        // This is the icon to use on the notification
+        CharSequence title = "Remindly";
         int icon = R.drawable.ic_launcher;
-        // This is the scrolling text of the notification
-        CharSequence text = "Your notification time is upon us.";
+        CharSequence text = "Reminder: ";
         // What time to show on the notification
         long time = System.currentTimeMillis();
 

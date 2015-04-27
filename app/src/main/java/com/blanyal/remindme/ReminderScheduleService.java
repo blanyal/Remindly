@@ -1,3 +1,20 @@
+/*
+ * Copyright 2015 Blanyal D'souza.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+
 package com.blanyal.remindme;
 
 import android.app.Service;
@@ -10,10 +27,8 @@ import java.util.Calendar;
 
 
 public class ReminderScheduleService extends Service {
+    private final IBinder mBinder = new ServiceBinder();
 
-    /**
-     * Class for clients to access
-     */
     public class ServiceBinder extends Binder {
         ReminderScheduleService getService() {
             return ReminderScheduleService.this;
@@ -33,15 +48,8 @@ public class ReminderScheduleService extends Service {
         return mBinder;
     }
 
-    // This is the object that receives interactions from clients. See
-    private final IBinder mBinder = new ServiceBinder();
-
-    /**
-     * Show an alarm for a certain date when the alarm is called it will pop up a notification
-     */
     public void setAlarm(Calendar c) {
         // This starts a new thread to set the alarm
-        // You want to push off your tasks onto a new thread to free up the UI to carry on responding
         new ReminderAlarm(this, c).run();
     }
 }

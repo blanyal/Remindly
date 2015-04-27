@@ -1,3 +1,20 @@
+/*
+ * Copyright 2015 Blanyal D'souza.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+
 package com.blanyal.remindme;
 
 import android.app.AlarmManager;
@@ -7,12 +24,10 @@ import android.content.Intent;
 
 import java.util.Calendar;
 
+
 public class ReminderAlarm implements Runnable{
-    // The date selected for the alarm
     private final Calendar date;
-    // The android system alarm manager
     private final AlarmManager am;
-    // Your context to retrieve the alarm manager from
     private final Context context;
 
     public ReminderAlarm(Context context, Calendar date) {
@@ -24,7 +39,6 @@ public class ReminderAlarm implements Runnable{
     @Override
     public void run() {
         // Request to start are service when the alarm date is upon us
-        // We don't start an activity as we just want to pop up a notification into the system bar not a full activity
         Intent intent = new Intent(context, ReminderNotifyService.class);
         intent.putExtra(ReminderNotifyService.INTENT_NOTIFY, true);
         PendingIntent pendingIntent = PendingIntent.getService(context, 0, intent, 0);
