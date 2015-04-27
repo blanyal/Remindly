@@ -61,6 +61,7 @@ public class MainActivity extends AppCompatActivity {
     private LinkedHashMap<Integer, Integer> IDmap = new LinkedHashMap<>();
     private ReminderDatabase rb;
     private MultiSelector mMultiSelector = new MultiSelector();
+    private Calendar mCalendar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,6 +90,19 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        mCalendar = Calendar.getInstance();
+
+        mCalendar.set(Calendar.MONTH, 3);
+        mCalendar.set(Calendar.YEAR, 2015);
+        mCalendar.set(Calendar.DAY_OF_MONTH, 27);
+        mCalendar.set(Calendar.HOUR_OF_DAY, 11);
+        mCalendar.set(Calendar.MINUTE, 58);
+        mCalendar.set(Calendar.SECOND, 0);
+        mCalendar.set(Calendar.AM_PM, Calendar.PM);
+
+
+        new ReminderAlarm().setAlarm(getApplicationContext(), mCalendar);
     }
 
     @Override

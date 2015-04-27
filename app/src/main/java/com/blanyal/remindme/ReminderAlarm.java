@@ -30,6 +30,9 @@ import android.media.RingtoneManager;
 import android.os.SystemClock;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.WakefulBroadcastReceiver;
+import android.util.Log;
+
+import java.util.Calendar;
 
 
 public class ReminderAlarm extends WakefulBroadcastReceiver {
@@ -50,15 +53,17 @@ public class ReminderAlarm extends WakefulBroadcastReceiver {
         nManager.notify(1, nBuilder.build());
     }
 
-    public void setAlarm(Context context, int milliseconds)
+    public void setAlarm(Context context, Calendar calendar)
     {
         mAlarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         mPendingIntent = PendingIntent.getBroadcast(context, 0, new Intent(context, ReminderAlarm.class), 0);
 
+        Log.d("TIME:", Long.toString(calendar.getTimeInMillis()));
+
         // Fire alarm every "milliseconds"
         mAlarmManager.setInexactRepeating(AlarmManager.ELAPSED_REALTIME,
-                SystemClock.elapsedRealtime() + milliseconds,
-                milliseconds,
+                SystemClock.elapsedRealtime() + 12000,
+                120000,
                 mPendingIntent);
 
         // Restart alarm if device is rebooted
