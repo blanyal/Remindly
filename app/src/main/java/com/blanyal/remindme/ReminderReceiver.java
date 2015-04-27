@@ -17,21 +17,33 @@
 
 package com.blanyal.remindme;
 
+import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
+import java.util.Calendar;
 
-public class BootReceiver extends BroadcastReceiver {
 
-    AlarmReceiver alarm = new AlarmReceiver();
+public class ReminderReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
 
-        if (intent.getAction().equals("android.intent.action.BOOT_COMPLETED"))
-        {
-            //alarm.setAlarm(context, MainActivity.DEFAULT_INTERVAL_DURATION);
-        }
+        Calendar mCalendar = Calendar.getInstance();
+
+        mCalendar.set(Calendar.MONTH, 3);
+        mCalendar.set(Calendar.YEAR, 2015);
+        mCalendar.set(Calendar.DAY_OF_MONTH, 27);
+        mCalendar.set(Calendar.HOUR_OF_DAY, 11);
+        mCalendar.set(Calendar.MINUTE, 58);
+        mCalendar.set(Calendar.SECOND, 0);
+        mCalendar.set(Calendar.AM_PM, Calendar.PM);
+
+        new AlarmReceiver().setAlarm(context, mCalendar);
+
+        // Delete the notification
+        NotificationManager nManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        nManager.cancel(1);
     }
 }

@@ -35,13 +35,15 @@ import android.util.Log;
 import java.util.Calendar;
 
 
-public class ReminderAlarm extends WakefulBroadcastReceiver {
+public class AlarmReceiver extends WakefulBroadcastReceiver {
     AlarmManager mAlarmManager;
     PendingIntent mPendingIntent;
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        NotificationCompat.Builder nBuilder = new NotificationCompat.Builder(context)
+        PendingIntent remind = PendingIntent.getBroadcast(context, 0, new Intent(context, ReminderReceiver.class)
+                , PendingIntent.FLAG_UPDATE_CURRENT);
+        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context)
                 .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_launcher))
                 .setTicker("Reminder")
                 .setContentTitle(context.getResources().getString(R.string.app_name))
@@ -50,20 +52,20 @@ public class ReminderAlarm extends WakefulBroadcastReceiver {
                 .setPriority(NotificationCompat.PRIORITY_MAX)
                 .setOnlyAlertOnce(true);
         NotificationManager nManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-        nManager.notify(1, nBuilder.build());
+        nManager.notify(0, mBuilder.build());
     }
 
     public void setAlarm(Context context, Calendar calendar)
     {
         mAlarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-        mPendingIntent = PendingIntent.getBroadcast(context, 0, new Intent(context, ReminderAlarm.class), 0);
+        mPendingIntent = PendingIntent.getBroadcast(context, 0, new Intent(context, AlarmReceiver.class), 0);
 
         Log.d("TIME:", Long.toString(calendar.getTimeInMillis()));
 
         // Fire alarm every "milliseconds"
         mAlarmManager.setInexactRepeating(AlarmManager.ELAPSED_REALTIME,
                 SystemClock.elapsedRealtime() + 12000,
-                120000,
+                12000,
                 mPendingIntent);
 
         // Restart alarm if device is rebooted
@@ -77,7 +79,7 @@ public class ReminderAlarm extends WakefulBroadcastReceiver {
     public void cancelAlarm(Context context)
     {
         mAlarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-        mPendingIntent = PendingIntent.getBroadcast(context, 0, new Intent(context, ReminderAlarm.class), 0);
+        mPendingIntent = PendingIntent.getBroadcast(context, 0, new Intent(context, AlarmReceiver.class), 0);
         mAlarmManager.cancel(mPendingIntent);
 
         // Disable BootReceiver so that alarm won't start again if device is rebooted

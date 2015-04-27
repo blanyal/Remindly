@@ -102,7 +102,7 @@ public class MainActivity extends AppCompatActivity {
         mCalendar.set(Calendar.AM_PM, Calendar.PM);
 
 
-        new ReminderAlarm().setAlarm(getApplicationContext(), mCalendar);
+        new AlarmReceiver().setAlarm(getApplicationContext(), mCalendar);
     }
 
     @Override
