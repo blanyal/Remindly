@@ -20,7 +20,7 @@ package com.blanyal.remindme;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.InputType;
@@ -43,7 +43,7 @@ import java.util.Calendar;
 import java.util.List;
 
 
-public class ReminderAddActivity extends ActionBarActivity implements
+public class ReminderAddActivity extends AppCompatActivity implements
         TimePickerDialog.OnTimeSetListener,
         DatePickerDialog.OnDateSetListener{
 
