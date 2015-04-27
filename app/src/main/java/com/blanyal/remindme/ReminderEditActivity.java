@@ -21,7 +21,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.InputType;
@@ -42,7 +42,7 @@ import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
 import java.util.Calendar;
 
 
-public class ReminderEditActivity extends ActionBarActivity implements
+public class ReminderEditActivity extends AppCompatActivity implements
         TimePickerDialog.OnTimeSetListener,
         DatePickerDialog.OnDateSetListener{
 
@@ -52,8 +52,6 @@ public class ReminderEditActivity extends ActionBarActivity implements
     private FloatingActionButton mFAB1;
     private FloatingActionButton mFAB2;
     private Switch mRepeatSwitch;
-    private Calendar mCalendar;
-    private int mYear, mMonth, mHour, mMinute, mDay;
     private String mTitle;
     private String mTime;
     private String mDate;

@@ -18,8 +18,8 @@
 package com.blanyal.remindme;
 
 import android.content.Intent;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -45,13 +45,14 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
 
 
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends AppCompatActivity {
     private RecyclerView mList;
     private SimpleAdapter mAdapter;
     private Toolbar mToolbar;
@@ -60,6 +61,8 @@ public class MainActivity extends ActionBarActivity {
     private LinkedHashMap<Integer, Integer> IDmap = new LinkedHashMap<>();
     private ReminderDatabase rb;
     private MultiSelector mMultiSelector = new MultiSelector();
+    private ReminderScheduleClient scheduleClient;
+    private Calendar c;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,6 +91,28 @@ public class MainActivity extends ActionBarActivity {
                 startActivity(intent);
             }
         });
+
+        scheduleClient = new ReminderScheduleClient(this);
+        scheduleClient.doBindService();
+
+        c = Calendar.getInstance();
+        c.set(Calendar.YEAR, 2015);
+        c.set(Calendar.MONTH, 3);
+        c.set(Calendar.DATE, 27);
+        c.set(Calendar.HOUR_OF_DAY, 10);
+        c.set(Calendar.MINUTE, 14);
+        c.set(Calendar.SECOND, 0);
+        // Ask our service to set an alarm for that date, this activity talks to the client that talks to the service
+
+    }
+
+    @Override
+    protected void onStop() {
+        // When our activity is stopped ensure we also stop the connection to the service
+        // this stops us leaking our activity into the system *bad*
+        if(scheduleClient != null)
+            scheduleClient.doUnbindService();
+        super.onStop();
     }
 
     @Override
@@ -141,6 +166,8 @@ public class MainActivity extends ActionBarActivity {
     };
 
     private void selectReminder(int mClickID) {
+        scheduleClient.setAlarmForNotification(c);
+
         Log.d("LOG", "ExtraID " + mClickID);
         String mStringClickID = Integer.toString(mClickID);
 
@@ -297,7 +324,7 @@ public class MainActivity extends ActionBarActivity {
 
             @Override
             public boolean onLongClick(View v) {
-                ActionBarActivity activity = MainActivity.this;
+                AppCompatActivity activity = MainActivity.this;
                 activity.startSupportActionMode(mDeleteMode);
                 mMultiSelector.setSelected(this, true);
                 return true;

@@ -23,6 +23,8 @@
                   android:label="@string/title_activity_add_reminder"/>
         <activity android:name=".ReminderEditActivity"
                   android:label="@string/title_activity_edit_reminder"/>
+        <service android:name=".ReminderScheduleService" />
+        <service android:name=".ReminderNotifyService" />
 
     </application>
 
