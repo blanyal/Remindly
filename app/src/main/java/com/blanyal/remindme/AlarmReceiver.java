@@ -41,18 +41,27 @@ public class AlarmReceiver extends WakefulBroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
+
         PendingIntent remind = PendingIntent.getBroadcast(context, 0, new Intent(context, ReminderReceiver.class)
                 , PendingIntent.FLAG_UPDATE_CURRENT);
+
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context)
                 .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_launcher))
+                .setSmallIcon( R.drawable.ic_launcher)
                 .setTicker("Reminder")
                 .setContentTitle(context.getResources().getString(R.string.app_name))
                 .setContentText("This is a reminder")
                 .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
                 .setPriority(NotificationCompat.PRIORITY_MAX)
                 .setOnlyAlertOnce(true);
+
+        int mNotificationId = 1;
+
         NotificationManager nManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-        nManager.notify(0, mBuilder.build());
+        nManager.notify(mNotificationId, mBuilder.build());
+
+        Log.d("NOTIFICATION:", "SUCCESS!!!");
+
     }
 
     public void setAlarm(Context context, Calendar calendar)
@@ -60,12 +69,17 @@ public class AlarmReceiver extends WakefulBroadcastReceiver {
         mAlarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         mPendingIntent = PendingIntent.getBroadcast(context, 0, new Intent(context, AlarmReceiver.class), 0);
 
-        Log.d("TIME:", Long.toString(calendar.getTimeInMillis()));
+        Calendar c = Calendar.getInstance();
+        long currentTime = c.getTimeInMillis();
+        long diffTime = calendar.getTimeInMillis() - currentTime;
 
-        // Fire alarm every "milliseconds"
+        Log.d("TIME1:", Long.toString(calendar.getTimeInMillis()));
+        Log.d("TIME2:", Long.toString(currentTime));
+        Log.d("TIME3:", Long.toString(diffTime));
+
         mAlarmManager.setInexactRepeating(AlarmManager.ELAPSED_REALTIME,
-                SystemClock.elapsedRealtime() + 12000,
-                12000,
+                SystemClock.elapsedRealtime() + diffTime,
+                diffTime,
                 mPendingIntent);
 
         // Restart alarm if device is rebooted
