@@ -89,6 +89,33 @@ public class AlarmReceiver extends WakefulBroadcastReceiver {
                 PackageManager.DONT_KILL_APP);
     }
 
+    public void setRepeatAlarm(Context context, Calendar calendar, int ID, long RepeatTime)
+    {
+        mAlarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        mPendingIntent = PendingIntent.getBroadcast(context, ID, new Intent(context, AlarmReceiver.class), 0);
+
+        Calendar c = Calendar.getInstance();
+        long currentTime = c.getTimeInMillis();
+        long diffTime = calendar.getTimeInMillis() - currentTime;
+
+        Log.d("TIME1:", Long.toString(calendar.getTimeInMillis()));
+        Log.d("TIME2:", Long.toString(currentTime));
+        Log.d("TIME3:", Long.toString(diffTime));
+        Log.d("REPEAT_TIME:", Long.toString(RepeatTime));
+        Log.d("ID:", Integer.toString(ID));
+
+        mAlarmManager.setRepeating(AlarmManager.ELAPSED_REALTIME,
+                SystemClock.elapsedRealtime() + diffTime,
+                RepeatTime , mPendingIntent);
+
+        // Restart alarm if device is rebooted
+        ComponentName receiver = new ComponentName(context, BootReceiver.class);
+        PackageManager pm = context.getPackageManager();
+        pm.setComponentEnabledSetting(receiver,
+                PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
+                PackageManager.DONT_KILL_APP);
+    }
+
     public void cancelAlarm(Context context, int ID)
     {
         mAlarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);

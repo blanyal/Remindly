@@ -60,6 +60,7 @@ public class ReminderEditActivity extends AppCompatActivity implements
     private String mActive;
     private String mRepeat;
     private int mReceivedID;
+    private long mRepeatTime;
     private Reminder mReceivedReminder;
     private ReminderDatabase rb;
 
@@ -71,6 +72,13 @@ public class ReminderEditActivity extends AppCompatActivity implements
     private static final String KEY_REPEAT_NO = "repeat_no_key";
     private static final String KEY_REPEAT_TYPE = "repeat_type_key";
     private static final String KEY_ACTIVE = "active_key";
+
+    private static final long milMinute = 60000L;
+    private static final long milHour = 3600000L;
+    private static final long milDay = 86400000L;
+    private static final long milWeek = 604800000L;
+    private static final long milMonth = 2592000000L;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -54,6 +54,7 @@ public class ReminderAddActivity extends AppCompatActivity implements
     private FloatingActionButton mFAB2;
     private Calendar mCalendar;
     private int mYear, mMonth, mHour, mMinute, mDay;
+    private long mRepeatTime;
     private String mTitle;
     private String mTime;
     private String mDate;
@@ -69,6 +70,13 @@ public class ReminderAddActivity extends AppCompatActivity implements
     private static final String KEY_REPEAT_NO = "repeat_no_key";
     private static final String KEY_REPEAT_TYPE = "repeat_type_key";
     private static final String KEY_ACTIVE = "active_key";
+
+    private static final long milMinute = 60000L;
+    private static final long milHour = 3600000L;
+    private static final long milDay = 86400000L;
+    private static final long milWeek = 604800000L;
+    private static final long milMonth = 2592000000L;
+
 
 
     @Override
@@ -311,16 +319,32 @@ public class ReminderAddActivity extends AppCompatActivity implements
         }
 
         Log.d("DETAILS:", "Month: " + mMonth + " Year: " + mYear + " Day: " + mDay
-            + " Hour: " + mHour + " Minute: " + mMinute);
+                + " Hour: " + mHour + " Minute: " + mMinute);
 
-        mCalendar.set(Calendar.MONTH, -- mMonth);
+        mCalendar.set(Calendar.MONTH, --mMonth);
         mCalendar.set(Calendar.YEAR, mYear);
         mCalendar.set(Calendar.DAY_OF_MONTH, mDay);
         mCalendar.set(Calendar.HOUR_OF_DAY, mHour);
         mCalendar.set(Calendar.MINUTE, mMinute);
         mCalendar.set(Calendar.SECOND, 0);
 
-        new AlarmReceiver().setAlarm(getApplicationContext(), mCalendar, ID);
+        if (mRepeatType.equals("Minute")) {
+            mRepeatTime = Integer.parseInt(mRepeatNo) * milMinute;
+        } else if (mRepeatType.equals("Hour")) {
+            mRepeatTime = Integer.parseInt(mRepeatNo) * milHour;
+        } else if (mRepeatType.equals("Day")) {
+            mRepeatTime = Integer.parseInt(mRepeatNo) * milDay;
+        } else if (mRepeatType.equals("Week")) {
+            mRepeatTime = Integer.parseInt(mRepeatNo) * milWeek;
+        } else if (mRepeatType.equals("Month")) {
+            mRepeatTime = Integer.parseInt(mRepeatNo) * milMonth;
+        }
+
+        if (mRepeat.equals("true")) {
+            new AlarmReceiver().setRepeatAlarm(getApplicationContext(), mCalendar, ID, mRepeatTime);
+        } else if (mRepeat.equals("false")) {
+            new AlarmReceiver().setAlarm(getApplicationContext(), mCalendar, ID);
+        }
 
         Toast.makeText(getApplicationContext(), "Saved",
                 Toast.LENGTH_SHORT).show();
