@@ -40,7 +40,7 @@ public class ReminderReceiver extends BroadcastReceiver {
         mCalendar.set(Calendar.SECOND, 0);
         mCalendar.set(Calendar.AM_PM, Calendar.PM);
 
-        new AlarmReceiver().setAlarm(context, mCalendar);
+        new AlarmReceiver().setAlarm(context, mCalendar, 1);
 
         // Delete the notification
         NotificationManager nManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);

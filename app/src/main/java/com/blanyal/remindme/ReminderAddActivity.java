@@ -203,6 +203,8 @@ public class ReminderAddActivity extends AppCompatActivity implements
 
     @Override
     public void onTimeSet(RadialPickerLayout view, int hourOfDay, int minute) {
+        mHour = hourOfDay;
+        mMinute = minute;
         mTime = hourOfDay + ":" + minute;
         mTimeText.setText(mTime);
     }
@@ -210,6 +212,9 @@ public class ReminderAddActivity extends AppCompatActivity implements
     @Override
     public void onDateSet(DatePickerDialog view, int year, int monthOfYear, int dayOfMonth) {
         monthOfYear ++;
+        mDay = dayOfMonth;
+        mMonth = monthOfYear;
+        mYear = year;
         mDate = dayOfMonth + "/" + monthOfYear + "/" + year;
         mDateText.setText(mDate);
     }
@@ -293,7 +298,7 @@ public class ReminderAddActivity extends AppCompatActivity implements
         ReminderDatabase rb = new ReminderDatabase(this);
 
         // Inserting Reminder
-        rb.addReminder(new Reminder(mTitle, mDate, mTime, mRepeat, mRepeatNo, mRepeatType, mActive));
+        int ID = rb.addReminder(new Reminder(mTitle, mDate, mTime, mRepeat, mRepeatNo, mRepeatType, mActive));
 
         List<Reminder> reminders = rb.getAllReminders();
 
@@ -304,6 +309,18 @@ public class ReminderAddActivity extends AppCompatActivity implements
 
             Log.d("Name: ", log);
         }
+
+        Log.d("DETAILS:", "Month: " + mMonth + " Year: " + mYear + " Day: " + mDay
+            + " Hour: " + mHour + " Minute: " + mMinute);
+
+        mCalendar.set(Calendar.MONTH, -- mMonth);
+        mCalendar.set(Calendar.YEAR, mYear);
+        mCalendar.set(Calendar.DAY_OF_MONTH, mDay);
+        mCalendar.set(Calendar.HOUR_OF_DAY, mHour);
+        mCalendar.set(Calendar.MINUTE, mMinute);
+        mCalendar.set(Calendar.SECOND, 0);
+
+        new AlarmReceiver().setAlarm(getApplicationContext(), mCalendar, ID);
 
         Toast.makeText(getApplicationContext(), "Saved",
                 Toast.LENGTH_SHORT).show();

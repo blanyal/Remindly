@@ -91,17 +91,16 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        mCalendar = Calendar.getInstance();
+        // mCalendar = Calendar.getInstance();
 
-        mCalendar.set(Calendar.MONTH, 3);
-        mCalendar.set(Calendar.YEAR, 2015);
-        mCalendar.set(Calendar.DAY_OF_MONTH, 29);
-        mCalendar.set(Calendar.HOUR_OF_DAY, 11);
-        mCalendar.set(Calendar.MINUTE, 3);
-        mCalendar.set(Calendar.SECOND, 0);
+        // mCalendar.set(Calendar.MONTH, 3);
+        // mCalendar.set(Calendar.YEAR, 2015);
+        // mCalendar.set(Calendar.DAY_OF_MONTH, 29);
+        // mCalendar.set(Calendar.HOUR_OF_DAY, 11);
+        // mCalendar.set(Calendar.MINUTE, mCalendar.get(Calendar.MINUTE) + 1);
+        // mCalendar.set(Calendar.SECOND, 0);
 
-
-        new AlarmReceiver().setAlarm(getApplicationContext(), mCalendar);
+        // new AlarmReceiver().setAlarm(getApplicationContext(), mCalendar, 1);
     }
 
     @Override

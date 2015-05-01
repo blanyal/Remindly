@@ -15,10 +15,7 @@
  */
 
 
-
-
 package com.blanyal.remindme;
-
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -28,6 +25,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import java.util.ArrayList;
 import java.util.List;
+
 
 public class ReminderDatabase extends SQLiteOpenHelper {
 
@@ -83,7 +81,7 @@ public class ReminderDatabase extends SQLiteOpenHelper {
     }
 
     // Adding new Reminder
-    public void addReminder(Reminder reminder){
+    public int addReminder(Reminder reminder){
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
 
@@ -96,9 +94,9 @@ public class ReminderDatabase extends SQLiteOpenHelper {
         values.put(KEY_ACTIVE, reminder.getActive());
 
         // Inserting Row
-        db.insert(TABLE_REMINDERS, null, values);
+        long ID = db.insert(TABLE_REMINDERS, null, values);
         db.close();
-
+        return (int) ID;
     }
 
 
@@ -106,7 +104,7 @@ public class ReminderDatabase extends SQLiteOpenHelper {
     public Reminder getReminder(int id){
         SQLiteDatabase db = this.getReadableDatabase();
 
-        Cursor cursor = db.query(TABLE_REMINDERS,new String[]
+        Cursor cursor = db.query(TABLE_REMINDERS, new String[]
                         {
                                 KEY_ID,
                                 KEY_TITLE,
