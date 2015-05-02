@@ -194,7 +194,7 @@
                 android:layout_alignParentLeft="true"
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="32dp"
-                android:src="@drawable/ic_access_time_grey600_24dp"
+                android:src="@drawable/ic_sync_grey600_24dp"
                 android:layout_centerVertical="true" />
 
             <LinearLayout
@@ -258,7 +258,7 @@
                 android:layout_alignParentLeft="true"
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="32dp"
-                android:src="@drawable/ic_access_time_grey600_24dp"
+                android:src="@drawable/ic_unfold_more_grey600_24dp"
                 android:layout_centerVertical="true" />
 
             <LinearLayout
@@ -305,7 +305,7 @@
                 android:layout_alignParentLeft="true"
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="32dp"
-                android:src="@drawable/ic_access_time_grey600_24dp"
+                android:src="@drawable/ic_subject_grey600_24dp"
                 android:layout_centerVertical="true" />
 
             <LinearLayout
@@ -358,7 +358,7 @@
         android:layout_height="wrap_content"
         android:clickable="true"
         android:onClick="selectFab1"
-        fab:fab_icon="@drawable/ic_star_grey600_24dp"
+        fab:fab_icon="@drawable/ic_notifications_off_grey600_24dp"
         fab:fab_colorNormal="@color/accent"
         fab:fab_colorPressed="@color/fab_pressed"
         app:fab_size="normal"
@@ -373,7 +373,7 @@
         android:layout_height="wrap_content"
         android:clickable="true"
         android:onClick="selectFab2"
-        fab:fab_icon="@drawable/ic_fab_star"
+        fab:fab_icon="@drawable/ic_notifications_on_white_24dp"
         fab:fab_colorNormal="@color/accent"
         fab:fab_colorPressed="@color/fab_pressed"
         app:fab_size="normal"
