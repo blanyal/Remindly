@@ -1,3 +1,3 @@
-# RemindMe
+# Remindly
 Android reminder app
  
