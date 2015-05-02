@@ -18,7 +18,7 @@
 
 package com.blanyal.remindme;
 
-
+// Class to create DateTime objects for easy sorting
 public class DateTimeSorter {
     public int mIndex;
     public String mDateTime;

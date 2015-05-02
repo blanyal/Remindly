@@ -17,7 +17,7 @@
 
 package com.blanyal.remindme;
 
-
+// Reminder class
 public class Reminder {
     private int mID;
     private String mTitle;

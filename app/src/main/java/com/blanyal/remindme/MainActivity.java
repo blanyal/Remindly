@@ -45,7 +45,6 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedHashMap;
@@ -68,21 +67,25 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // Initialize reminder database
         rb = new ReminderDatabase(getApplicationContext());
 
+        // Initialize views
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         mAddReminderButton = (FloatingActionButton) findViewById(R.id.add_reminder);
         mList = (RecyclerView) findViewById(R.id.reminder_list);
 
+        // Create recycler view
         mList.setLayoutManager(getLayoutManager());
         registerForContextMenu(mList);
-
         mAdapter = new SimpleAdapter();
         mAdapter.setItemCount(getDefaultItemCount());
         mList.setAdapter(mAdapter);
 
+        // Setup toolbar
         mToolbar.setTitle(R.string.app_name);
 
+        // On clicking the floating action button
         mAddReminderButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -91,14 +94,17 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        // Initialize alarm
         mAlarmReceiver = new AlarmReceiver();
     }
 
+    // Create context menu for long press actions
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         getMenuInflater().inflate(R.menu.menu_add_reminder, menu);
     }
 
+    // Multi select items in recycler view
     private android.support.v7.view.ActionMode.Callback mDeleteMode = new ModalMultiSelectorCallback(mMultiSelector) {
 
         @Override
@@ -111,30 +117,44 @@ public class MainActivity extends AppCompatActivity {
         public boolean onActionItemClicked(android.support.v7.view.ActionMode actionMode, MenuItem menuItem) {
             switch (menuItem.getItemId()) {
 
+                // On clicking discard reminders
                 case R.id.discard_reminder:
+                    // Close the context menu
                     actionMode.finish();
 
+                    // Get the reminder id associated with the recycler view item
                     for (int i = IDmap.size(); i >= 0; i--) {
                         if (mMultiSelector.isSelected(i, 0)) {
                             int id = IDmap.get(i);
 
+                            // Get reminder from reminder database using id
                             Reminder temp = rb.getReminder(id);
+                            // Delete reminder
                             rb.deleteReminder(temp);
+                            // Remove reminder from recycler view
                             mAdapter.removeItemSelected(i);
+                            // Delete reminder alarm
                             mAlarmReceiver.cancelAlarm(getApplicationContext(), id);
                         }
                     }
 
+                    // Clear selected items in recycler view
                     mMultiSelector.clearSelections();
+                    // Recreate the recycler items
+                    // This is done to remap the item and reminder ids
                     mAdapter.onDeleteItem(getDefaultItemCount());
 
+                    // Display toast to confirm delete
                     Toast.makeText(getApplicationContext(),
                             "Deleted",
                             Toast.LENGTH_SHORT).show();
                     return true;
 
+                // On clicking save reminders
                 case R.id.save_reminder:
+                    // Close the context menu
                     actionMode.finish();
+                    // Clear selected items in recycler view
                     mMultiSelector.clearSelections();
                     return true;
 
@@ -145,10 +165,13 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
+    // On clicking a reminder item
     private void selectReminder(int mClickID) {
         Log.d("LOG", "ExtraID " + mClickID);
         String mStringClickID = Integer.toString(mClickID);
 
+        // Create intent to edit the reminder
+        // Put reminder id as extra
         Intent i = new Intent(this, ReminderEditActivity.class);
         i.putExtra(ReminderEditActivity.EXTRA_REMINDER_ID, mStringClickID);
         startActivityForResult(i, 1);
@@ -159,12 +182,15 @@ public class MainActivity extends AppCompatActivity {
         mAdapter.setItemCount(getDefaultItemCount());
     }
 
+    // Recreate recycler view
+    // This is done so that newly created reminders are displayed
     @Override
     public void onResume(){
         super.onResume();
         mAdapter.setItemCount(getDefaultItemCount());
     }
 
+    // Layout manager for recycler view
     protected RecyclerView.LayoutManager getLayoutManager() {
         return new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
     }
@@ -173,6 +199,7 @@ public class MainActivity extends AppCompatActivity {
         return 100;
     }
 
+    // Create menu
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
@@ -185,6 +212,7 @@ public class MainActivity extends AppCompatActivity {
         return id == R.id.action_settings || super.onOptionsItemSelected(item);
     }
 
+    // Adapter class for recycler view
     public class SimpleAdapter extends RecyclerView.Adapter<SimpleAdapter.VerticalItemHolder> {
         private ArrayList<ReminderItem> mItems;
 
@@ -209,6 +237,7 @@ public class MainActivity extends AppCompatActivity {
             notifyItemRemoved(selected);
         }
 
+        // View holder for recycler view items
         @Override
         public VerticalItemHolder onCreateViewHolder(ViewGroup container, int viewType) {
             LayoutInflater inflater = LayoutInflater.from(container.getContext());
@@ -231,6 +260,7 @@ public class MainActivity extends AppCompatActivity {
             return mItems.size();
         }
 
+        // Class for recycler view items
         public  class ReminderItem {
             public String mTitle;
             public String mDateTime;
@@ -249,6 +279,7 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
+        // Class to compare date and time so that items are sorted in ascending order
         public class DateTimeComparator implements Comparator {
             DateFormat f = new SimpleDateFormat("dd/mm/yyyy hh:mm");
 
@@ -264,6 +295,7 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
+        // UI and data class for recycler view items
         public  class VerticalItemHolder extends SwappingHolder
                 implements View.OnClickListener, View.OnLongClickListener {
             private TextView mTitleText, mDateAndTimeText, mRepeatInfoText;
@@ -278,8 +310,10 @@ public class MainActivity extends AppCompatActivity {
                 itemView.setOnLongClickListener(this);
                 itemView.setLongClickable(true);
 
+                // Initialize adapter for the items
                 mAdapter = adapter;
 
+                // Initialize views
                 mTitleText = (TextView) itemView.findViewById(R.id.recycle_title);
                 mDateAndTimeText = (TextView) itemView.findViewById(R.id.recycle_date_time);
                 mRepeatInfoText = (TextView) itemView.findViewById(R.id.recycle_repeat_info);
@@ -287,6 +321,7 @@ public class MainActivity extends AppCompatActivity {
                 mThumbnailImage = (ImageView) itemView.findViewById(R.id.thumbnail_image);
             }
 
+            // On clicking a reminder item
             @Override
             public void onClick(View v) {
                 if (!mMultiSelector.tapSelection(this)) {
@@ -300,6 +335,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
 
+            // On long press enter action mode with context menu
             @Override
             public boolean onLongClick(View v) {
                 AppCompatActivity activity = MainActivity.this;
@@ -308,6 +344,7 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             }
 
+            // Set reminder title view
             public void setReminderTitle(String title) {
                 mTitleText.setText(title);
                 String letter = "A";
@@ -316,6 +353,7 @@ public class MainActivity extends AppCompatActivity {
                     letter = title.substring(0, 1);
                 }
 
+                // Create a circular icon consisting of  a random background colour and first letter of title
                 int color = mColorGenerator.getRandomColor();
 
                 mDrawableBuilder = TextDrawable.builder()
@@ -323,10 +361,12 @@ public class MainActivity extends AppCompatActivity {
                 mThumbnailImage.setImageDrawable(mDrawableBuilder);
             }
 
+            // Set date and time views
             public void setReminderDateTime(String datetime) {
                 mDateAndTimeText.setText(datetime);
             }
 
+            // Set repeat views
             public void setReminderRepeatInfo(String repeat, String repeatNo, String repeatType) {
                 if(repeat.equals("true")){
                     mRepeatInfoText.setText("Every " + repeatNo + " " + repeatType + "(s)");
@@ -335,6 +375,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
 
+            // Set active image as on or off
             public void setActiveImage(String active){
                 if(active.equals("true")){
                     mActiveImage.setImageResource(R.drawable.ic_toggle_star);
@@ -344,15 +385,19 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
+        // Generate random test data
         public  ReminderItem generateDummyData() {
             return new ReminderItem("1", "2", "3", "4", "5", "6");
         }
 
+        // Generate real data for each item
         public List<ReminderItem> generateData(int count) {
             ArrayList<SimpleAdapter.ReminderItem> items = new ArrayList<>();
 
+            // Get all reminders from the database
             List<Reminder> reminders = rb.getAllReminders();
 
+            // Initialize lists
             List<String> Titles = new ArrayList<>();
             List<String> Repeats = new ArrayList<>();
             List<String> RepeatNos = new ArrayList<>();
@@ -362,6 +407,7 @@ public class MainActivity extends AppCompatActivity {
             List<Integer> IDList= new ArrayList<>();
             List<DateTimeSorter> DateTimeSortList = new ArrayList<>();
 
+            // Add details of all reminders in their respective lists
             for (Reminder r : reminders) {
                 Titles.add(r.getTitle());
                 DateAndTime.add(r.getDate() + " " + r.getTime());
@@ -374,15 +420,18 @@ public class MainActivity extends AppCompatActivity {
 
             int key = 0;
 
+            // Add date and time as DateTimeSorter objects
             for(int k = 0; k<Titles.size(); k++){
                 DateTimeSortList.add(new DateTimeSorter(key, DateAndTime.get(k)));
                 key++;
             }
 
+            // Sort items according to date and time in ascending order
             Collections.sort(DateTimeSortList, new DateTimeComparator());
 
             int k = 0;
 
+            // Add data to each recycler view item
             for (DateTimeSorter item:DateTimeSortList) {
                 int i = item.getIndex();
 
