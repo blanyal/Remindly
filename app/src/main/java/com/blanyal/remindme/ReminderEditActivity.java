@@ -26,6 +26,7 @@ import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -59,10 +60,15 @@ public class ReminderEditActivity extends AppCompatActivity implements
     private String mRepeatType;
     private String mActive;
     private String mRepeat;
+    private String[] mDateSplit;
+    private String[] mTimeSplit;
     private int mReceivedID;
+    private int mYear, mMonth, mHour, mMinute, mDay;
     private long mRepeatTime;
+    private Calendar mCalendar;
     private Reminder mReceivedReminder;
     private ReminderDatabase rb;
+    private AlarmReceiver mAlarmReceiver;
 
     public static final String EXTRA_REMINDER_ID = "Reminder_ID";
     private static final String KEY_TITLE = "title_key";
@@ -179,6 +185,21 @@ public class ReminderEditActivity extends AppCompatActivity implements
         } else if (mRepeat.equals("true")) {
             mRepeatSwitch.setChecked(true);
         }
+
+        mCalendar = Calendar.getInstance();
+        mAlarmReceiver = new AlarmReceiver();
+
+        mDateSplit = mDate.split("/");
+        mTimeSplit = mTime.split(":");
+
+        Log.d("DATE AND TIME: ", mDateSplit[0] + " " + mDateSplit[1] + " " + mDateSplit[2] + " "
+                + mTimeSplit[0] + " " + mTimeSplit[1]);
+
+        mDay = Integer.parseInt(mDateSplit[0]);
+        mMonth = Integer.parseInt(mDateSplit[1]);
+        mYear = Integer.parseInt(mDateSplit[2]);
+        mHour = Integer.parseInt(mTimeSplit[0]);
+        mMinute = Integer.parseInt(mTimeSplit[1]);
     }
 
     @Override
@@ -223,6 +244,8 @@ public class ReminderEditActivity extends AppCompatActivity implements
 
     @Override
     public void onTimeSet(RadialPickerLayout view, int hourOfDay, int minute) {
+        mHour = hourOfDay;
+        mMinute = minute;
         mTime = hourOfDay + ":" + minute;
         mTimeText.setText(mTime);
     }
@@ -230,6 +253,9 @@ public class ReminderEditActivity extends AppCompatActivity implements
     @Override
     public void onDateSet(DatePickerDialog view, int year, int monthOfYear, int dayOfMonth) {
         monthOfYear ++;
+        mDay = dayOfMonth;
+        mMonth = monthOfYear;
+        mYear = year;
         mDate = dayOfMonth + "/" + monthOfYear + "/" + year;
         mDateText.setText(mDate);
     }
@@ -321,6 +347,33 @@ public class ReminderEditActivity extends AppCompatActivity implements
 
         rb.updateReminder(mReceivedReminder);
 
+        mCalendar.set(Calendar.MONTH, --mMonth);
+        mCalendar.set(Calendar.YEAR, mYear);
+        mCalendar.set(Calendar.DAY_OF_MONTH, mDay);
+        mCalendar.set(Calendar.HOUR_OF_DAY, mHour);
+        mCalendar.set(Calendar.MINUTE, mMinute);
+        mCalendar.set(Calendar.SECOND, 0);
+
+        mAlarmReceiver.cancelAlarm(getApplicationContext(), mReceivedID);
+
+        if (mRepeatType.equals("Minute")) {
+            mRepeatTime = Integer.parseInt(mRepeatNo) * milMinute;
+        } else if (mRepeatType.equals("Hour")) {
+            mRepeatTime = Integer.parseInt(mRepeatNo) * milHour;
+        } else if (mRepeatType.equals("Day")) {
+            mRepeatTime = Integer.parseInt(mRepeatNo) * milDay;
+        } else if (mRepeatType.equals("Week")) {
+            mRepeatTime = Integer.parseInt(mRepeatNo) * milWeek;
+        } else if (mRepeatType.equals("Month")) {
+            mRepeatTime = Integer.parseInt(mRepeatNo) * milMonth;
+        }
+
+        if (mRepeat.equals("true")) {
+            mAlarmReceiver.setRepeatAlarm(getApplicationContext(), mCalendar, mReceivedID, mRepeatTime);
+        } else if (mRepeat.equals("false")) {
+            mAlarmReceiver.setAlarm(getApplicationContext(), mCalendar, mReceivedID);
+        }
+
         Toast.makeText(getApplicationContext(), "Edited",
                 Toast.LENGTH_SHORT).show();
         onBackPressed();
@@ -357,7 +410,7 @@ public class ReminderEditActivity extends AppCompatActivity implements
                 return true;
 
             case R.id.discard_reminder:
-                Toast.makeText(getApplicationContext(), "Discarded",
+                Toast.makeText(getApplicationContext(), "Changes Discarded",
                         Toast.LENGTH_SHORT).show();
 
                 onBackPressed();

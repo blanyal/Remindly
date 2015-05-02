@@ -78,7 +78,6 @@ public class ReminderAddActivity extends AppCompatActivity implements
     private static final long milMonth = 2592000000L;
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
