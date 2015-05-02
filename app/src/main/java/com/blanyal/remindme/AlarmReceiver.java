@@ -50,14 +50,20 @@ public class AlarmReceiver extends WakefulBroadcastReceiver {
         Reminder reminder = rb.getReminder(mReceivedID);
         String mTitle = reminder.getTitle();
 
+        // Create intent to open ReminderEditActivity on notification click
+        Intent editIntent = new Intent(context, ReminderEditActivity.class);
+        editIntent.putExtra(ReminderEditActivity.EXTRA_REMINDER_ID, Integer.toString(mReceivedID));
+        PendingIntent mClick = PendingIntent.getActivity(context, mReceivedID, editIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
         // Create Notification
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context)
                 .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_launcher))
-                .setSmallIcon( R.drawable.ic_launcher)
-                .setTicker(mTitle)
+                .setSmallIcon(R.drawable.ic_launcher)
                 .setContentTitle(context.getResources().getString(R.string.app_name))
+                .setTicker(mTitle)
                 .setContentText(mTitle)
                 .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
+                .setContentIntent(mClick)
                 .setOnlyAlertOnce(true);
 
         NotificationManager nManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);

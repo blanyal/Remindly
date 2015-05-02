@@ -337,7 +337,7 @@ public class ReminderEditActivity extends AppCompatActivity implements
         alert.show();
     }
 
-    // On clicking repeat no button
+    // On clicking repeat interval button
     public void setRepeatNo(View v){
         AlertDialog.Builder alert = new AlertDialog.Builder(this);
         alert.setTitle("Enter Number");
