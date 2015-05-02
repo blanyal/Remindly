@@ -6,14 +6,9 @@
           android:title="@string/action_discard_reminder"
           app:showAsAction="ifRoom" />
 
-
-
     <item android:id="@+id/save_reminder"
           android:icon="@drawable/ic_check_white_24dp"
           android:title="@string/action_save_reminder"
           app:showAsAction="ifRoom" />
-
-
-
 
 </menu>
