@@ -301,6 +301,7 @@ public class ReminderAddActivity extends AppCompatActivity implements
         AlertDialog.Builder alert = new AlertDialog.Builder(this);
         alert.setTitle("Enter Number");
 
+        // Create EditText box to input repeat number
         final EditText input = new EditText(this);
         input.setInputType(InputType.TYPE_CLASS_NUMBER);
         alert.setView(input);
@@ -308,9 +309,16 @@ public class ReminderAddActivity extends AppCompatActivity implements
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
 
-                        mRepeatNo = input.getText().toString().trim();
-                        mRepeatNoText.setText(mRepeatNo);
-                        mRepeatText.setText("Every " + mRepeatNo + " " + mRepeatType + "(s)");
+                        if (input.getText().toString().length() == 0) {
+                            mRepeatNo = Integer.toString(1);
+                            mRepeatNoText.setText(mRepeatNo);
+                            mRepeatText.setText("Every " + mRepeatNo + " " + mRepeatType + "(s)");
+                        }
+                        else {
+                            mRepeatNo = input.getText().toString().trim();
+                            mRepeatNoText.setText(mRepeatNo);
+                            mRepeatText.setText("Every " + mRepeatNo + " " + mRepeatType + "(s)");
+                        }
                     }
                 });
         alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {

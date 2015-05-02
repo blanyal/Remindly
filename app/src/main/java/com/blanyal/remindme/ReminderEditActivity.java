@@ -350,9 +350,16 @@ public class ReminderEditActivity extends AppCompatActivity implements
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
 
-                        mRepeatNo = input.getText().toString().trim();
-                        mRepeatNoText.setText(mRepeatNo);
-                        mRepeatText.setText("Every " + mRepeatNo + " " + mRepeatType + "(s)");
+                        if (input.getText().toString().length() == 0) {
+                            mRepeatNo = Integer.toString(1);
+                            mRepeatNoText.setText(mRepeatNo);
+                            mRepeatText.setText("Every " + mRepeatNo + " " + mRepeatType + "(s)");
+                        }
+                        else {
+                            mRepeatNo = input.getText().toString().trim();
+                            mRepeatNoText.setText(mRepeatNo);
+                            mRepeatText.setText("Every " + mRepeatNo + " " + mRepeatType + "(s)");
+                        }
                     }
                 });
         alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {

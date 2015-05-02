@@ -6,7 +6,6 @@
                 android:layout_height="match_parent"
                 tools:context=".MainActivity">
 
-
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_height="wrap_content"
@@ -18,15 +17,11 @@
         app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
         android:background="?attr/colorPrimary" />
 
-
-
     <android.support.v7.widget.RecyclerView
         android:id="@+id/reminder_list"
         android:layout_below="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
-
-
 
     <View
         android:layout_width="match_parent"
@@ -45,7 +40,5 @@
         android:layout_alignParentRight="true"
         android:layout_marginBottom="8dp"
         android:layout_marginRight="8dp"/>
-
-
 
 </RelativeLayout>

@@ -83,6 +83,7 @@ public class MainActivity extends AppCompatActivity {
         mList.setAdapter(mAdapter);
 
         // Setup toolbar
+        setSupportActionBar(mToolbar);
         mToolbar.setTitle(R.string.app_name);
 
         // On clicking the floating action button
@@ -198,6 +199,29 @@ public class MainActivity extends AppCompatActivity {
     protected int getDefaultItemCount() {
         return 100;
     }
+
+    // Create menu
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main_menu, menu);
+        return true;
+    }
+
+    // Setup menu
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            // start licenses activity
+            case R.id.action_licenses:
+                Intent intent = new Intent(this, LicensesActivity.class);
+                startActivity(intent);
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
 
     // Adapter class for recycler view
     public class SimpleAdapter extends RecyclerView.Adapter<SimpleAdapter.VerticalItemHolder> {
