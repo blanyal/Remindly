@@ -41,33 +41,41 @@ public class AlarmReceiver extends WakefulBroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
+        int mReceivedID = Integer.parseInt(intent.getStringExtra(ReminderEditActivity.EXTRA_REMINDER_ID));
 
-        PendingIntent remind = PendingIntent.getBroadcast(context, 0, new Intent(context, ReminderReceiver.class)
-                , PendingIntent.FLAG_UPDATE_CURRENT);
+        Log.d("INTENT ID: ", Integer.toString(mReceivedID));
 
+        // Get notification title from Reminder Database
+        ReminderDatabase rb = new ReminderDatabase(context);
+        Reminder reminder = rb.getReminder(mReceivedID);
+        String mTitle = reminder.getTitle();
+
+        // Create Notification
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context)
                 .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_launcher))
                 .setSmallIcon( R.drawable.ic_launcher)
-                .setTicker("Reminder")
+                .setTicker(mTitle)
                 .setContentTitle(context.getResources().getString(R.string.app_name))
-                .setContentText("This is a reminder")
+                .setContentText(mTitle)
                 .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
                 .setOnlyAlertOnce(true);
 
-        int mNotificationId = 1;
-
         NotificationManager nManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-        nManager.notify(mNotificationId, mBuilder.build());
+        nManager.notify(mReceivedID, mBuilder.build());
 
         Log.d("NOTIFICATION:", "SUCCESS!!!");
 
     }
 
-    public void setAlarm(Context context, Calendar calendar, int ID)
-    {
+    public void setAlarm(Context context, Calendar calendar, int ID) {
         mAlarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-        mPendingIntent = PendingIntent.getBroadcast(context, ID, new Intent(context, AlarmReceiver.class), 0);
 
+        // Put Reminder ID in Intent Extra
+        Intent intent = new Intent(context, AlarmReceiver.class);
+        intent.putExtra(ReminderEditActivity.EXTRA_REMINDER_ID, Integer.toString(ID));
+        mPendingIntent = PendingIntent.getBroadcast(context, ID, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+
+        // Calculate notification time
         Calendar c = Calendar.getInstance();
         long currentTime = c.getTimeInMillis();
         long diffTime = calendar.getTimeInMillis() - currentTime;
@@ -77,7 +85,7 @@ public class AlarmReceiver extends WakefulBroadcastReceiver {
         Log.d("TIME3:", Long.toString(diffTime));
         Log.d("ID:", Integer.toString(ID));
 
-        // Set notification time
+        // Start alarm using notification time
         mAlarmManager.set(AlarmManager.ELAPSED_REALTIME,
                 SystemClock.elapsedRealtime() + diffTime,
                 mPendingIntent);
@@ -90,11 +98,15 @@ public class AlarmReceiver extends WakefulBroadcastReceiver {
                 PackageManager.DONT_KILL_APP);
     }
 
-    public void setRepeatAlarm(Context context, Calendar calendar, int ID, long RepeatTime)
-    {
+    public void setRepeatAlarm(Context context, Calendar calendar, int ID, long RepeatTime) {
         mAlarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-        mPendingIntent = PendingIntent.getBroadcast(context, ID, new Intent(context, AlarmReceiver.class), 0);
 
+        // Put Reminder ID in Intent Extra
+        Intent intent = new Intent(context, AlarmReceiver.class);
+        intent.putExtra(ReminderEditActivity.EXTRA_REMINDER_ID, Integer.toString(ID));
+        mPendingIntent = PendingIntent.getBroadcast(context, ID, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+
+        // Calculate notification time
         Calendar c = Calendar.getInstance();
         long currentTime = c.getTimeInMillis();
         long diffTime = calendar.getTimeInMillis() - currentTime;
@@ -105,7 +117,7 @@ public class AlarmReceiver extends WakefulBroadcastReceiver {
         Log.d("REPEAT_TIME: ", Long.toString(RepeatTime));
         Log.d("ID: ", Integer.toString(ID));
 
-        // Set initial notification time and repeat interval time
+        // Start alarm using initial notification time and repeat interval time
         mAlarmManager.setRepeating(AlarmManager.ELAPSED_REALTIME,
                 SystemClock.elapsedRealtime() + diffTime,
                 RepeatTime , mPendingIntent);
@@ -118,16 +130,17 @@ public class AlarmReceiver extends WakefulBroadcastReceiver {
                 PackageManager.DONT_KILL_APP);
     }
 
-    public void cancelAlarm(Context context, int ID)
-    {
+    public void cancelAlarm(Context context, int ID) {
         mAlarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+
+        // Cancel Alarm using Reminder ID
         mPendingIntent = PendingIntent.getBroadcast(context, ID, new Intent(context, AlarmReceiver.class), 0);
         mAlarmManager.cancel(mPendingIntent);
 
         Log.d("ID: ", Integer.toString(ID));
         Log.d("CANCEL ALARM: ", "Alarm Cancelled");
 
-        // Disable BootReceiver so that alarm won't start again if device is rebooted
+        // Disable alarm if device is rebooted
         ComponentName receiver = new ComponentName(context, BootReceiver.class);
         PackageManager pm = context.getPackageManager();
         pm.setComponentEnabledSetting(receiver,
