@@ -102,6 +102,7 @@ public class AlarmReceiver extends WakefulBroadcastReceiver {
         pm.setComponentEnabledSetting(receiver,
                 PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
                 PackageManager.DONT_KILL_APP);
+
     }
 
     public void setRepeatAlarm(Context context, Calendar calendar, int ID, long RepeatTime) {
@@ -112,7 +113,7 @@ public class AlarmReceiver extends WakefulBroadcastReceiver {
         intent.putExtra(ReminderEditActivity.EXTRA_REMINDER_ID, Integer.toString(ID));
         mPendingIntent = PendingIntent.getBroadcast(context, ID, intent, PendingIntent.FLAG_CANCEL_CURRENT);
 
-        // Calculate notification time
+        // Calculate notification timein
         Calendar c = Calendar.getInstance();
         long currentTime = c.getTimeInMillis();
         long diffTime = calendar.getTimeInMillis() - currentTime;
@@ -121,6 +122,11 @@ public class AlarmReceiver extends WakefulBroadcastReceiver {
         Log.d("TIME2: ", Long.toString(currentTime));
         Log.d("TIME3: ", Long.toString(diffTime));
         Log.d("REPEAT_TIME: ", Long.toString(RepeatTime));
+
+        Log.d("Details Time: ", Integer.toString(c.get(Calendar.HOUR_OF_DAY)) + ":" + Integer.toString(c.get(Calendar.MINUTE))
+                + " " + Integer.toString(c.get(Calendar.YEAR)) + "/" + Integer.toString(c.get(Calendar.MONTH) + 1)
+                + "/" + Integer.toString(c.get(Calendar.DATE)));
+
         Log.d("ID: ", Integer.toString(ID));
 
         // Start alarm using initial notification time and repeat interval time
@@ -134,6 +140,7 @@ public class AlarmReceiver extends WakefulBroadcastReceiver {
         pm.setComponentEnabledSetting(receiver,
                 PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
                 PackageManager.DONT_KILL_APP);
+
     }
 
     public void cancelAlarm(Context context, int ID) {

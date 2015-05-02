@@ -402,10 +402,12 @@ public class ReminderEditActivity extends AppCompatActivity implements
         }
 
         // Create a new notification
-        if (mRepeat.equals("true")) {
-            mAlarmReceiver.setRepeatAlarm(getApplicationContext(), mCalendar, mReceivedID, mRepeatTime);
-        } else if (mRepeat.equals("false")) {
-            mAlarmReceiver.setAlarm(getApplicationContext(), mCalendar, mReceivedID);
+        if (mActive.equals("true")) {
+            if (mRepeat.equals("true")) {
+                mAlarmReceiver.setRepeatAlarm(getApplicationContext(), mCalendar, mReceivedID, mRepeatTime);
+            } else if (mRepeat.equals("false")) {
+                mAlarmReceiver.setAlarm(getApplicationContext(), mCalendar, mReceivedID);
+            }
         }
 
         // Create toast to confirm update

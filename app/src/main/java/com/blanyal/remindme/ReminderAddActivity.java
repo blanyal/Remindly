@@ -363,10 +363,12 @@ public class ReminderAddActivity extends AppCompatActivity implements
         }
 
         // Create a new notification
-        if (mRepeat.equals("true")) {
-            new AlarmReceiver().setRepeatAlarm(getApplicationContext(), mCalendar, ID, mRepeatTime);
-        } else if (mRepeat.equals("false")) {
-            new AlarmReceiver().setAlarm(getApplicationContext(), mCalendar, ID);
+        if (mActive.equals("true")) {
+            if (mRepeat.equals("true")) {
+                new AlarmReceiver().setRepeatAlarm(getApplicationContext(), mCalendar, ID, mRepeatTime);
+            } else if (mRepeat.equals("false")) {
+                new AlarmReceiver().setAlarm(getApplicationContext(), mCalendar, ID);
+            }
         }
 
         // Create toast to confirm new reminder
