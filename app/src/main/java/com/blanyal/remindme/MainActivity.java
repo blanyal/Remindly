@@ -213,7 +213,7 @@ public class MainActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             // start licenses activity
             case R.id.action_licenses:
-                Intent intent = new Intent(this, LicensesActivity.class);
+                Intent intent = new Intent(this, LicencesActivity.class);
                 startActivity(intent);
                 return true;
 
