@@ -153,7 +153,7 @@ public class AlarmReceiver extends WakefulBroadcastReceiver {
         Log.d("ID: ", Integer.toString(ID));
         Log.d("CANCEL ALARM: ", "Alarm Cancelled");
 
-        // Disable alarm if device is rebooted
+        // Disable alarm
         ComponentName receiver = new ComponentName(context, BootReceiver.class);
         PackageManager pm = context.getPackageManager();
         pm.setComponentEnabledSetting(receiver,

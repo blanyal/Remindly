@@ -26,7 +26,6 @@
         <activity android:name=".ReminderEditActivity"
                   android:label="@string/title_activity_edit_reminder"/>
         <receiver android:name=".AlarmReceiver"/>
-        <receiver android:name=".ReminderReceiver"/>
         <receiver android:name=".BootReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED"></action>
