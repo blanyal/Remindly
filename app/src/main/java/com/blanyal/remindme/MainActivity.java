@@ -365,9 +365,9 @@ public class MainActivity extends AppCompatActivity {
             // Set active image as on or off
             public void setActiveImage(String active){
                 if(active.equals("true")){
-                    mActiveImage.setImageResource(R.drawable.ic_toggle_star);
+                    mActiveImage.setImageResource(R.drawable.ic_notifications_on_white_24dp);
                 }else if (active.equals("false")) {
-                    mActiveImage.setImageResource(R.drawable.ic_star_outline_grey600_24dp);
+                    mActiveImage.setImageResource(R.drawable.ic_notifications_off_grey600_24dp);
                 }
             }
         }
