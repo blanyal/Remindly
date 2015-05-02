@@ -61,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
     private LinkedHashMap<Integer, Integer> IDmap = new LinkedHashMap<>();
     private ReminderDatabase rb;
     private MultiSelector mMultiSelector = new MultiSelector();
-    private Calendar mCalendar;
+    private AlarmReceiver mAlarmReceiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,16 +91,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        // mCalendar = Calendar.getInstance();
-
-        // mCalendar.set(Calendar.MONTH, 3);
-        // mCalendar.set(Calendar.YEAR, 2015);
-        // mCalendar.set(Calendar.DAY_OF_MONTH, 29);
-        // mCalendar.set(Calendar.HOUR_OF_DAY, 11);
-        // mCalendar.set(Calendar.MINUTE, mCalendar.get(Calendar.MINUTE) + 1);
-        // mCalendar.set(Calendar.SECOND, 0);
-
-        // new AlarmReceiver().setAlarm(getApplicationContext(), mCalendar, 1);
+        mAlarmReceiver = new AlarmReceiver();
     }
 
     @Override
@@ -130,6 +121,7 @@ public class MainActivity extends AppCompatActivity {
                             Reminder temp = rb.getReminder(id);
                             rb.deleteReminder(temp);
                             mAdapter.removeItemSelected(i);
+                            mAlarmReceiver.cancelAlarm(getApplicationContext(), id);
                         }
                     }
 

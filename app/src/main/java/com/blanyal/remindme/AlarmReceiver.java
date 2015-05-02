@@ -77,6 +77,7 @@ public class AlarmReceiver extends WakefulBroadcastReceiver {
         Log.d("TIME3:", Long.toString(diffTime));
         Log.d("ID:", Integer.toString(ID));
 
+        // Set notification time
         mAlarmManager.set(AlarmManager.ELAPSED_REALTIME,
                 SystemClock.elapsedRealtime() + diffTime,
                 mPendingIntent);
@@ -98,12 +99,13 @@ public class AlarmReceiver extends WakefulBroadcastReceiver {
         long currentTime = c.getTimeInMillis();
         long diffTime = calendar.getTimeInMillis() - currentTime;
 
-        Log.d("TIME1:", Long.toString(calendar.getTimeInMillis()));
-        Log.d("TIME2:", Long.toString(currentTime));
-        Log.d("TIME3:", Long.toString(diffTime));
-        Log.d("REPEAT_TIME:", Long.toString(RepeatTime));
-        Log.d("ID:", Integer.toString(ID));
+        Log.d("TIME1: ", Long.toString(calendar.getTimeInMillis()));
+        Log.d("TIME2: ", Long.toString(currentTime));
+        Log.d("TIME3: ", Long.toString(diffTime));
+        Log.d("REPEAT_TIME: ", Long.toString(RepeatTime));
+        Log.d("ID: ", Integer.toString(ID));
 
+        // Set initial notification time and repeat interval time
         mAlarmManager.setRepeating(AlarmManager.ELAPSED_REALTIME,
                 SystemClock.elapsedRealtime() + diffTime,
                 RepeatTime , mPendingIntent);
@@ -121,6 +123,9 @@ public class AlarmReceiver extends WakefulBroadcastReceiver {
         mAlarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         mPendingIntent = PendingIntent.getBroadcast(context, ID, new Intent(context, AlarmReceiver.class), 0);
         mAlarmManager.cancel(mPendingIntent);
+
+        Log.d("ID: ", Integer.toString(ID));
+        Log.d("CANCEL ALARM: ", "Alarm Cancelled");
 
         // Disable BootReceiver so that alarm won't start again if device is rebooted
         ComponentName receiver = new ComponentName(context, BootReceiver.class);
