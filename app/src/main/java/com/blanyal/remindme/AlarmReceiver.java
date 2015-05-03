@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 Blanyal D'souza.
+ * Copyright 2015 Blanyal D'Souza.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,7 +30,6 @@ import android.media.RingtoneManager;
 import android.os.SystemClock;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.WakefulBroadcastReceiver;
-import android.util.Log;
 
 import java.util.Calendar;
 
