@@ -16,7 +16,6 @@
             android:layout_height="wrap_content"
             android:layout_margin="20dp"
             android:text="@string/licenses"/>
-
     </ScrollView>
     
     <android.support.v7.widget.Toolbar
@@ -35,5 +34,4 @@
         android:layout_height="2dp"
         android:layout_below="@+id/toolbar"
         android:background="@drawable/toolbar_dropshadow" />
-
 </RelativeLayout>

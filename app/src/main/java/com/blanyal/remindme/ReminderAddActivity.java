@@ -336,19 +336,6 @@ public class ReminderAddActivity extends AppCompatActivity implements
         // Creating Reminder
         int ID = rb.addReminder(new Reminder(mTitle, mDate, mTime, mRepeat, mRepeatNo, mRepeatType, mActive));
 
-        List<Reminder> reminders = rb.getAllReminders();
-
-        for (Reminder rm : reminders) {
-            String log = "Id: " + rm.getID() + " ,Title: " + rm.getTitle() + " ,Date: " + rm.getDate()
-                    + " ,Time: " + rm.getTime() + " ,Repeat: " + rm.getRepeat() + " ,RepeatNo: " + rm.getRepeatNo()
-                    + " ,RepeatType: " + rm.getRepeatType() + " ,Active: " + rm.getActive();
-
-            Log.d("Name: ", log);
-        }
-
-        Log.d("DETAILS:", "Month: " + mMonth + " Year: " + mYear + " Day: " + mDay
-                + " Hour: " + mHour + " Minute: " + mMinute);
-
         // Set up calender for creating the notification
         mCalendar.set(Calendar.MONTH, --mMonth);
         mCalendar.set(Calendar.YEAR, mYear);
