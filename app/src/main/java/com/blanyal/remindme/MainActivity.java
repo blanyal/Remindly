@@ -168,7 +168,6 @@ public class MainActivity extends AppCompatActivity {
 
     // On clicking a reminder item
     private void selectReminder(int mClickID) {
-        Log.d("LOG", "ExtraID " + mClickID);
         String mStringClickID = Integer.toString(mClickID);
 
         // Create intent to edit the reminder
@@ -364,9 +363,9 @@ public class MainActivity extends AppCompatActivity {
                     letter = title.substring(0, 1);
                 }
 
-                // Create a circular icon consisting of  a random background colour and first letter of title
                 int color = mColorGenerator.getRandomColor();
 
+                // Create a circular icon consisting of  a random background colour and first letter of title
                 mDrawableBuilder = TextDrawable.builder()
                         .buildRound(letter, color);
                 mThumbnailImage.setImageDrawable(mDrawableBuilder);
@@ -445,10 +444,6 @@ public class MainActivity extends AppCompatActivity {
             // Add data to each recycler view item
             for (DateTimeSorter item:DateTimeSortList) {
                 int i = item.getIndex();
-
-                String log = i + " || " + Titles.get(i) + " || " + DateAndTime.get(i) + " || " + Repeats.get(i)
-                        + " || " + RepeatNos.get(i) + " || " + RepeatTypes.get(i) + " || " + Actives.get(i);
-                Log.d("Name: ", log);
 
                 items.add(new SimpleAdapter.ReminderItem(Titles.get(i), DateAndTime.get(i), Repeats.get(i),
                         RepeatNos.get(i), RepeatTypes.get(i), Actives.get(i)));

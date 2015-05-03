@@ -207,9 +207,6 @@ public class ReminderEditActivity extends AppCompatActivity implements
         mDateSplit = mDate.split("/");
         mTimeSplit = mTime.split(":");
 
-        Log.d("DATE AND TIME: ", mDateSplit[0] + " " + mDateSplit[1] + " " + mDateSplit[2] + " "
-                + mTimeSplit[0] + " " + mTimeSplit[1]);
-
         mDay = Integer.parseInt(mDateSplit[0]);
         mMonth = Integer.parseInt(mDateSplit[1]);
         mYear = Integer.parseInt(mDateSplit[2]);

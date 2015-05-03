@@ -1,5 +1,4 @@
 <resources>
-
     <string name="app_name">Remindly</string>
 
     <string name="title_activity_add_reminder">Add Reminder</string>
@@ -481,5 +480,4 @@
                             Creative Commons may be contacted at creativecommons.org.</TT>\n\n\n
         <BIG><b>END OF LICENSES</b></BIG>
     </string>
-
 </resources>

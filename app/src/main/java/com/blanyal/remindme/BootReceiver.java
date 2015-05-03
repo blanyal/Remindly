@@ -62,12 +62,6 @@ public class BootReceiver extends BroadcastReceiver {
             List<Reminder> reminders = rb.getAllReminders();
 
             for (Reminder rm : reminders) {
-                String log = "Id: " + rm.getID() + " ,Title: " + rm.getTitle() + " ,Date: " + rm.getDate()
-                        + " ,Time: " + rm.getTime() + " ,Repeat: " + rm.getRepeat() + " ,RepeatNo: " + rm.getRepeatNo()
-                        + " ,RepeatType: " + rm.getRepeatType() + " ,Active: " + rm.getActive();
-
-                Log.d("Name: ", log);
-
                 mReceivedID = rm.getID();
                 mRepeat = rm.getRepeat();
                 mRepeatNo = rm.getRepeatNo();
@@ -78,9 +72,6 @@ public class BootReceiver extends BroadcastReceiver {
 
                 mDateSplit = mDate.split("/");
                 mTimeSplit = mTime.split(":");
-
-                Log.d("DATE AND TIME: ", mDateSplit[0] + " " + mDateSplit[1] + " " + mDateSplit[2] + " "
-                        + mTimeSplit[0] + " " + mTimeSplit[1]);
 
                 mDay = Integer.parseInt(mDateSplit[0]);
                 mMonth = Integer.parseInt(mDateSplit[1]);

@@ -28,7 +28,6 @@ import java.util.List;
 
 
 public class ReminderDatabase extends SQLiteOpenHelper {
-
     // Database Version
     private static final int DATABASE_VERSION = 1;
 
@@ -99,7 +98,6 @@ public class ReminderDatabase extends SQLiteOpenHelper {
         return (int) ID;
     }
 
-
     // Getting single Reminder
     public Reminder getReminder(int id){
         SQLiteDatabase db = this.getReadableDatabase();
@@ -155,7 +153,6 @@ public class ReminderDatabase extends SQLiteOpenHelper {
                 reminderList.add(reminder);
             } while (cursor.moveToNext());
         }
-
         return reminderList;
     }
 
@@ -184,7 +181,6 @@ public class ReminderDatabase extends SQLiteOpenHelper {
         // Updating row
         return db.update(TABLE_REMINDERS, values, KEY_ID + "=?",
                 new String[]{String.valueOf(reminder.getID())});
-
     }
 
     // Deleting single Reminder
@@ -194,7 +190,4 @@ public class ReminderDatabase extends SQLiteOpenHelper {
                 new String[]{String.valueOf(reminder.getID())});
         db.close();
     }
-
-
-
 }
