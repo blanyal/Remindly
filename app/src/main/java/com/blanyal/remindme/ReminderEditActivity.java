@@ -261,7 +261,11 @@ public class ReminderEditActivity extends AppCompatActivity implements
     public void onTimeSet(RadialPickerLayout view, int hourOfDay, int minute) {
         mHour = hourOfDay;
         mMinute = minute;
-        mTime = hourOfDay + ":" + minute;
+        if (minute < 10) {
+            mTime = hourOfDay + ":" + "0" + minute;
+        } else {
+            mTime = hourOfDay + ":" + minute;
+        }
         mTimeText.setText(mTime);
     }
 
