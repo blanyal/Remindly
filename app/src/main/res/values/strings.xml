@@ -33,6 +33,8 @@
     
     <string name="action_discard_reminder">Discard Reminder</string>
     <string name="action_save_reminder">Save Reminder</string>
+    
+    <string name="no_reminders">Click on the plus button below to begin creating your reminders!</string>
 
     <string name="licenses"><BIG><b>NOTICES FOR LIBRARIES:</b></BIG> \n\n  <b>      1)  MaterialDateTimePicker
         </b> \n\n<TT>Copyright (c) 2015 Wouter Dullaert\n\n

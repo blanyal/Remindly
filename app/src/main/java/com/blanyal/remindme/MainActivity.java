@@ -54,6 +54,7 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView mList;
     private SimpleAdapter mAdapter;
     private Toolbar mToolbar;
+    private TextView mNoReminderView;
     private FloatingActionButton mAddReminderButton;
     private int mTempPost;
     private LinkedHashMap<Integer, Integer> IDmap = new LinkedHashMap<>();
@@ -73,6 +74,15 @@ public class MainActivity extends AppCompatActivity {
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         mAddReminderButton = (FloatingActionButton) findViewById(R.id.add_reminder);
         mList = (RecyclerView) findViewById(R.id.reminder_list);
+        mNoReminderView = (TextView) findViewById(R.id.no_reminder_text);
+
+        // To check is there are saved reminders
+        // If there are no reminders display a message asking the user to create reminders
+        List<Reminder> mTest = rb.getAllReminders();
+
+        if (mTest.isEmpty()) {
+            mNoReminderView.setVisibility(View.VISIBLE);
+        }
 
         // Create recycler view
         mList.setLayoutManager(getLayoutManager());
@@ -148,6 +158,17 @@ public class MainActivity extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(),
                             "Deleted",
                             Toast.LENGTH_SHORT).show();
+
+                    // To check is there are saved reminders
+                    // If there are no reminders display a message asking the user to create reminders
+                    List<Reminder> mTest = rb.getAllReminders();
+
+                    if (mTest.isEmpty()) {
+                        mNoReminderView.setVisibility(View.VISIBLE);
+                    } else {
+                        mNoReminderView.setVisibility(View.GONE);
+                    }
+
                     return true;
 
                 // On clicking save reminders
@@ -186,6 +207,17 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onResume(){
         super.onResume();
+
+        // To check is there are saved reminders
+        // If there are no reminders display a message asking the user to create reminders
+        List<Reminder> mTest = rb.getAllReminders();
+
+        if (mTest.isEmpty()) {
+            mNoReminderView.setVisibility(View.VISIBLE);
+        } else {
+            mNoReminderView.setVisibility(View.GONE);
+        }
+
         mAdapter.setItemCount(getDefaultItemCount());
     }
 

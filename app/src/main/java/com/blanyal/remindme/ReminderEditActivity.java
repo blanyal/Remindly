@@ -108,7 +108,7 @@ public class ReminderEditActivity extends AppCompatActivity implements
 
         // Setup Toolbar
         setSupportActionBar(mToolbar);
-        getSupportActionBar().setTitle(R.string.title_activity_add_reminder);
+        getSupportActionBar().setTitle(R.string.title_activity_edit_reminder);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
 
