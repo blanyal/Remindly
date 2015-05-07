@@ -14,11 +14,14 @@ Features
        src="https://developer.android.com/images/brand/en_generic_rgb_wo_60.png" />
 </a>
 
-![](screenshots/screenshot1.png)
+Screenshots
+-------
 
-![](screenshots/screenshot2.png)
+<img src="https://github.com/blanyal/Remindly/blob/master/screenshots/screenshot1.png" width="400">
 
-![](screenshots/screenshot3.png)
+<img src="https://github.com/blanyal/Remindly/blob/master/screenshots/screenshot2.png" width="400">
+
+<img src="https://github.com/blanyal/Remindly/blob/master/screenshots/screenshot3.png" width="400">
 
 License
 -------
