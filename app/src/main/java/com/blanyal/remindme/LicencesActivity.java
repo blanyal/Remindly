@@ -63,5 +63,4 @@ public class LicencesActivity extends AppCompatActivity {
     public void onBackPressed() {
         super.onBackPressed();
     }
-
 }
