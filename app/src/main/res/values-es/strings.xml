@@ -34,7 +34,7 @@
     <string name="action_discard_reminder">Recordatorio Descarte</string>
     <string name="action_save_reminder">Guardar Recordatorio</string>
     
-    <string name="no_reminders">Haga clic en el botón de más abajo para comenzar a crear tus recordatorios!</string>
+    <string name="no_reminders">Haga clic en el botón con forma algo positivo de abajo para empezar a crear tus recordatorios!</string>
 
     <string name="licenses"><BIG><b>NOTICES FOR LIBRARIES:</b></BIG> \n\n  <b>      1)  MaterialDateTimePicker
         </b> \n\n<TT>Copyright (c) 2015 Wouter Dullaert\n\n
