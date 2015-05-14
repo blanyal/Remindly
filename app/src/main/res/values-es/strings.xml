@@ -16,6 +16,8 @@
 
 <resources>
 
+    <!-- Spanish Translation -->
+
     <string name="app_name">Remindly</string>
 
     <string name="title_activity_add_reminder">Añadir Recordatorio</string>
